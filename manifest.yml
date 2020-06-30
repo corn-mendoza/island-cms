@@ -4,7 +4,7 @@ applications:
   - dotnet_core_buildpack
   command: "cd && ln -s /home/media ./wwwroot/media && exec dotnet ./cms-mvc.dll --server.urls http://0.0.0.0:${PORT}"
   services:
-  - visland-nfs
+  - island-nfs
   env:
     PIRANHA_BASEPATH: /home/media/
     PIRANHA_BASEURL: ~/media/
