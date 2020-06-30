@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>4c8fa049-cf10-4d69-9766-1f99b3bec9ad</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+    <PackageReference Include="Piranha" Version="8.3.0" />
+    <PackageReference Include="Piranha.AspNetCore.Identity.SQLServer" Version="8.3.0" />
+    <PackageReference Include="Piranha.AttributeBuilder" Version="8.3.0" />
+    <PackageReference Include="Piranha.Data.EF.SqlServer" Version="8.3.0" />
+    <PackageReference Include="Piranha.ImageSharp" Version="8.3.0-rc1" />
+    <PackageReference Include="Piranha.Local.FileStorage" Version="8.3.0" />
+    <PackageReference Include="Piranha.Manager" Version="8.3.1" />
+    <PackageReference Include="Piranha.Manager.TinyMCE" Version="8.3.0" />
+    <PackageReference Include="Steeltoe.Common.Hosting" Version="2.4.4" />
+    <PackageReference Include="Steeltoe.Extensions.Logging.DynamicLogger" Version="2.4.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="manifest.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="seed\bird-s-eye-view-photography-of-lighted-city-3573383.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="seed\cheerful-diverse-colleagues-working-on-laptops-in-workspace-3860809.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="seed\concentrated-little-kids-taking-notes-in-organizer-and-3874109.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="seed\cute-business-kids-working-on-project-together-surfing-3874121.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="seed\diverse-group-of-colleagues-having-meditation-together-3860619.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="seed\man-in-red-jacket-standing-on-the-stairs-4390730.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="seed\person-looking-at-phone-and-at-macbook-pro-1181244.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="seed\smiling-woman-working-in-office-with-coworkers-3860641.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="seed\woman-in-blue-long-sleeve-dress-standing-beside-brown-wooden-4100766.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
