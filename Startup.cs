@@ -4,12 +4,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using Steeltoe.Management.CloudFoundry;
+using Microsoft.Extensions.Logging;
+using cms_mvc.Models;
 using Piranha;
 using Piranha.AttributeBuilder;
-using Piranha.AspNetCore.Identity.SQLServer;
-using Piranha.Data.EF.SQLServer;
 using Piranha.Manager.Editor;
-using System;
+using Piranha.Azure;
+using Piranha.Data.EF.MySql;
+using Piranha.Data.EF.SQLite;
+using Piranha.Data.EF.SQLServer;
+using Piranha.Data.EF.PostgreSql;
+using Piranha.AspNetCore.Identity.SQLServer;
+using Piranha.AspNetCore.Identity.SQLite;
+using Piranha.AspNetCore.Identity.MySQL;
+using Piranha.AspNetCore.Identity.PostgreSQL;
 
 namespace cms_mvc
 {
@@ -26,37 +36,59 @@ namespace cms_mvc
             _config = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            string _basePath = null;
-            string _envPath = Environment.GetEnvironmentVariable("PIRANHA_BASEPATH");
-            if (!string.IsNullOrEmpty(_envPath))
-            {
-                _basePath = _envPath;
-            }
-            string _baseUrl = null;
-            string _envUrl = Environment.GetEnvironmentVariable("PIRANHA_BASEURL");
-            if (!string.IsNullOrEmpty(_envUrl))
-            {
-                _baseUrl = _envUrl;
-            }
+            PiranhaOptions _appOptions = _config.GetSection("piranha").Get<PiranhaOptions>();
+
+            // Add management endpoints if running on cloud foundry
+            services.AddCloudFoundryActuators(_config);
+
             // Service setup
             services.AddPiranha(options =>
             {
                 options.AddRazorRuntimeCompilation = true;
 
-                options.UseFileStorage(basePath: _basePath, baseUrl: _baseUrl, naming: Piranha.Local.FileStorageNaming.UniqueFolderNames);
+                if (_appOptions.UseFileStorage)
+                    options.UseFileStorage(basePath: _appOptions.BasePath, baseUrl: _appOptions.BaseUrl, naming: Piranha.Local.FileStorageNaming.UniqueFolderNames);
+                else
+                    options.UseBlobStorage(_config.GetConnectionString("piranha-media"));
+
                 options.UseImageSharp();
                 options.UseManager();
                 options.UseTinyMCE();
                 options.UseMemoryCache();
 
-                options.UseEF<SQLServerDb>(db =>
-                    db.UseSqlServer(_config.GetConnectionString("piranha")));
-                options.UseIdentityWithSeed<IdentitySQLServerDb>(db =>
-                    db.UseSqlServer(_config.GetConnectionString("piranha")));
+                switch (_appOptions.DatabaseType)
+                {
+                    case "mysql":
+                        options.UseEF<MySqlDb>(db =>
+                            db.UseMySql(_config.GetConnectionString("piranha")));
+                        options.UseIdentityWithSeed<IdentitySQLServerDb>(db =>
+                            db.UseMySql(_config.GetConnectionString("piranha")));
+                        break;
+
+                    case "postgres":
+                        options.UseEF<PostgreSqlDb>(db =>
+                            db.UseNpgsql(_config.GetConnectionString("piranha")));
+                        options.UseIdentityWithSeed<IdentitySQLServerDb>(db =>
+                            db.UseNpgsql(_config.GetConnectionString("piranha")));
+                        break;
+
+                    case "sqlserver":
+                        options.UseEF<SQLServerDb>(db =>
+                            db.UseSqlServer(_config.GetConnectionString("piranha")));
+                        options.UseIdentityWithSeed<IdentitySQLServerDb>(db =>
+                            db.UseSqlServer(_config.GetConnectionString("piranha")));
+                        break;
+
+                    default:
+                        options.UseEF<SQLiteDb> (db =>
+                            db.UseSqlite("Filename="+_appOptions.DatabaseFilePath));
+                        options.UseIdentityWithSeed<IdentitySQLiteDb>(db =>
+                            db.UseSqlite("Filename="+_appOptions.DatabaseFilePath));
+                        break;
+
+                }
             });
 
         }
@@ -68,6 +100,8 @@ namespace cms_mvc
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCloudFoundryActuators();
 
             // Initialize Piranha
             App.Init(api);

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Steeltoe.Common.Hosting;
 using Steeltoe.Extensions.Logging;
+using Steeltoe.Extensions.Configuration.ConfigServer;
 
 namespace cms_mvc
 {
@@ -22,7 +23,9 @@ namespace cms_mvc
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseCloudHosting().UseStartup<Startup>();
+                    webBuilder.UseCloudHosting()
+                    .AddConfigServer()
+                    .UseStartup<Startup>();
                 })
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
