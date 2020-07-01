@@ -52,11 +52,13 @@ namespace cms_mvc
                 options.UseManager();
                 options.UseTinyMCE();
                 options.UseMemoryCache();
+
                 options.UseEF<SQLServerDb>(db =>
                     db.UseSqlServer(_config.GetConnectionString("piranha")));
                 options.UseIdentityWithSeed<IdentitySQLServerDb>(db =>
                     db.UseSqlServer(_config.GetConnectionString("piranha")));
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
