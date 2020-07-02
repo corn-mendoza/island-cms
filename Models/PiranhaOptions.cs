@@ -14,6 +14,9 @@ namespace cms_mvc.Models
         private string _databasePath = "./";
         private string _mediaStorageType = "file";
 
+        public bool UseDiscoveryServices { get; set; } = false;
+
+
         // Current valid types are: sqlserver | mysql | postgres | file
         public string DatabaseType
         {
