@@ -8,6 +8,7 @@ This application is built using .NET Core 3.1 and CMS frameworks developed by Pi
 
 - Use NFS volume mounts with .NET Core application deployments to persist content
 - Implement a simple configuration based application options support for different deployment options
+- Support both Cloud Foundry and Kubernetes based deployments from a single set of source code
 
 ## Installation
 
