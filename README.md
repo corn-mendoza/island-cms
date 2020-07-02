@@ -8,9 +8,13 @@ This application is built using .NET Core 3.1 and CMS frameworks developed by Pi
 
 - Use NFS volume mounts with .NET Core application deployments to persist content
 - Implement a simple configuration based application options support for different deployment options
+- Provide the ability to override configuration file data with environment variables injected using config maps implemented through a single options class
 - Support both Cloud Foundry and Kubernetes based deployments from a single set of source code
 
 ## Installation
+
+### Volume Mounts
+One difference between cloud foundry and kubernetes deployments is when nfs mounts are done during the container deployment stage. On cloud foundry, volume mounts occur at the start of the the container deployment process while on kubernetes, volume mounts are attached after the application is staged. Because of this, you cannot nfs mount a volume to a sub-folder of the application. This can cause issues for applications dependent on subfolders to be located in a specific location. In this application, that is the case for the base URL. The base URL must point to a sub-folder of the application. To resolve this, the start command in the manifest has been modified to create a symbolic link to the nfs location. The start command in the manifest file will need to be modified if the volume is mounted in a different location than `/home/media`.
 
 ### Available Configuration Environment Variables
 By default, the environment variables will always override configuration settings located in the appsettings.json file. All of the settings below can also be configured in settings file.
