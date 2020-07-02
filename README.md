@@ -4,6 +4,11 @@ CMS Portal built using Piranha CMS frameworks and modified for Container deploym
 ## Overview
 This application is built using .NET Core 3.1 and CMS frameworks developed by Piranha CMS Open Source project. The application is designed to use an NFS mount to store media and SQL Server to store application data.
 
+## Objectives
+
+- Use NFS volume mounts with .NET Core application deployments to persist content
+- Implement a simple configuration based application options support for different deployment options
+
 ## Installation
 
 ### Available Configuration Environment Variables
