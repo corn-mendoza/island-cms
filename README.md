@@ -31,18 +31,19 @@ By default, the environment variables will always override configuration setting
 The application can be configured using the standard .NET Core configuration files.
 
 Example appsettings.json entries:
-	"piranha": {
-	  "DatabaseType": "file",
-	  "DatabaseFilename": "piranha.db",
-	  "DatabasePath": ".",
-	  "BasePath": "wwwroot/uploads",
-	  "BaseUrl": "~/uploads/",
-	  "MediaStorageType": "file"
-	},
-	"ConnectionStrings": {
-	  "piranha": "Server=sqlserver;Database=island_cms;UID=piranha_user;Password=password",
-	  "blobstorage": "DefaultEndpointsProtocol=https;AccountName=;AccountKey=;EndpointSuffix="
-	}
+
+		"piranha": {
+		  "DatabaseType": "file",
+		  "DatabaseFilename": "piranha.db",
+		  "DatabasePath": ".",
+		  "BasePath": "wwwroot/uploads",
+		  "BaseUrl": "~/uploads/",
+		  "MediaStorageType": "file"
+		},
+		"ConnectionStrings": {
+		  "piranha": "Server=sqlserver;Database=island_cms;UID=piranha_user;Password=password",
+		  "blobstorage": "DefaultEndpointsProtocol=https;AccountName=;AccountKey=;EndpointSuffix="
+		}
 
 
 ### Secrets Support
