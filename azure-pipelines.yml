@@ -21,7 +21,7 @@ stages:
     - task: DownloadSecureFile@1
       inputs:
         secureFile: 'harbor.crt'
-        socketTimeout: '300'
+        socketTimeout: '3000'
     - task: Bash@3
       inputs:
         targetType: 'inline'
