@@ -27,8 +27,10 @@ stages:
         targetType: 'inline'
         script: |
           # Write your commands here
+          
           sudo mkdir /usr/share/ca-certificates/extra
-          echo 'Hello world'
+          sudo cp harbor.crt /usr/share/ca-certificates/extra/harbor.crt
+          sudo update-ca-certificates
     - task: Docker@2
       inputs:
         containerRegistry: 'harbor-islands'
