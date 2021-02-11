@@ -19,18 +19,16 @@ stages:
     displayName: Build
     steps:
     - task: DownloadSecureFile@1
+      name: caCertificate
+      displayName: 'Download CA certificate'
       inputs:
         secureFile: 'harbor.crt'
-        socketTimeout: '3000'
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          # Write your commands here
-          
-          sudo mkdir /usr/share/ca-certificates/extra
-          sudo cp harbor.crt /usr/share/ca-certificates/extra/harbor.crt
-          sudo update-ca-certificates
+
+    - script: |
+        echo Installing $(caCertificate.secureFilePath) to the trusted CA directory...
+        sudo chown root:root $(caCertificate.secureFilePath)
+        sudo chmod a+r $(caCertificate.secureFilePath)
+        sudo ln -s -t /etc/ssl/certs/ $(caCertificate.secureFilePath)
     - task: Docker@2
       inputs:
         containerRegistry: 'harbor-islands'
