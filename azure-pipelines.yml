@@ -19,12 +19,11 @@ stages:
     displayName: Build
     steps:
     - task: Docker@2
-      displayName: Build an image
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
+        containerRegistry: 'harbor-islands'
+        repository: 'development/island-cms'
+        command: 'build'
+        Dockerfile: '**/Dockerfile'
     - task: Docker@2
       inputs:
         containerRegistry: 'harbor-islands'
