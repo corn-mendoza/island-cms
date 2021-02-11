@@ -27,7 +27,7 @@ stages:
         targetType: 'inline'
         script: |
           # Write your commands here
-          
+          sudo mkdir /usr/share/ca-certificates/extra
           echo 'Hello world'
     - task: Docker@2
       inputs:
