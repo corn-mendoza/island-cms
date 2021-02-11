@@ -52,7 +52,7 @@ Example appsettings.json entries:
 		},
 		"ConnectionStrings": {
 		  "piranha": "Server=sqlserver;Database=island_cms;UID=piranha_user;Password=password",
-		  "blobstorage": "DefaultEndpointsProtocol=https;AccountName=;AccountKey=;EndpointSuffix="
+		  "pirahna-media": "DefaultEndpointsProtocol=https;AccountName=;AccountKey=;EndpointSuffix="
 		}
 
 
