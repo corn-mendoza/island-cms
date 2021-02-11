@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -9,26 +9,32 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
-    <PackageReference Include="Piranha" Version="8.3.0" />
-    <PackageReference Include="Piranha.AspNetCore.Identity.SQLServer" Version="8.3.0" />
-    <PackageReference Include="Piranha.AspNetCore.Identity.MySql" Version="8.3.1" />
-    <PackageReference Include="Piranha.AspNetCore.Identity.PostgreSQL" Version="8.3.1" />
-    <PackageReference Include="Piranha.AspNetCore.Identity.SQLite" Version="8.3.0" />
-    <PackageReference Include="Piranha.AttributeBuilder" Version="8.3.0" />
-    <PackageReference Include="Piranha.Azure.BlobStorage" Version="8.3.0" />
-    <PackageReference Include="Piranha.Data.EF.SqlServer" Version="8.3.0" />
-    <PackageReference Include="Piranha.Data.EF.MySql" Version="8.3.0" />
-    <PackageReference Include="Piranha.Data.EF.PostgreSQL" Version="8.3.0" />
-    <PackageReference Include="Piranha.Data.EF.SQLite" Version="8.3.0" />
-    <PackageReference Include="Piranha.ImageSharp" Version="8.3.0-rc1" />
-    <PackageReference Include="Piranha.Local.FileStorage" Version="8.3.0" />
-    <PackageReference Include="Piranha.Manager" Version="8.3.1" />
-    <PackageReference Include="Piranha.Manager.TinyMCE" Version="8.3.0" />
-    <PackageReference Include="Steeltoe.Common.Hosting" Version="2.4.4" />
-    <PackageReference Include="Steeltoe.Extensions.Logging.DynamicLogger" Version="2.4.4" />
-    <PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="2.4.4" />
-    <PackageReference Include="Steeltoe.Management.ExporterCore" Version="2.4.4" />
-    <PackageReference Include="Steeltoe.Management.CloudFoundryCore" Version="2.4.4" />
+    <PackageReference Include="Piranha" Version="8.4.2" />
+    <PackageReference Include="Piranha.AspNetCore" Version="8.4.1" />
+    <PackageReference Include="Piranha.AspNetCore.Identity" Version="8.4.0" />
+    <PackageReference Include="Piranha.AspNetCore.Identity.SQLServer" Version="8.4.0" />
+    <PackageReference Include="Piranha.AspNetCore.Identity.MySql" Version="8.4.0" />
+    <PackageReference Include="Piranha.AspNetCore.Identity.PostgreSQL" Version="8.4.0" />
+    <PackageReference Include="Piranha.AspNetCore.Identity.SQLite" Version="8.4.0" />
+    <PackageReference Include="Piranha.AttributeBuilder" Version="8.4.0" />
+    <PackageReference Include="Piranha.Azure.BlobStorage" Version="8.4.0" />
+    <PackageReference Include="Piranha.Data.EF" Version="8.4.0" />
+    <PackageReference Include="Piranha.Data.EF.SqlServer" Version="8.4.0" />
+    <PackageReference Include="Piranha.Data.EF.MySql" Version="8.4.0" />
+    <PackageReference Include="Piranha.Data.EF.PostgreSQL" Version="8.4.0" />
+    <PackageReference Include="Piranha.Data.EF.SQLite" Version="8.4.0" />
+    <PackageReference Include="Piranha.ImageSharp" Version="8.4.0" />
+    <PackageReference Include="Piranha.Local.FileStorage" Version="8.4.0" />
+    <PackageReference Include="Piranha.Manager" Version="8.4.2" />
+    <PackageReference Include="Piranha.Manager.Localization" Version="8.4.1" />
+    <PackageReference Include="Piranha.Manager.TinyMCE" Version="8.4.1" />
+    <PackageReference Include="Steeltoe.Common.Hosting" Version="2.5.2" />
+    <PackageReference Include="Steeltoe.Extensions.Configuration.CloudFoundryCore" Version="2.5.2" />
+    <PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="2.5.2" />
+    <PackageReference Include="Steeltoe.Extensions.Configuration.PlaceholderBase" Version="2.5.2" />
+    <PackageReference Include="Steeltoe.Extensions.Logging.DynamicLogger" Version="2.5.2" />
+    <PackageReference Include="Steeltoe.Management.CloudFoundryCore" Version="2.5.2" />
+    <PackageReference Include="Steeltoe.Management.ExporterCore" Version="2.5.2" />
   </ItemGroup>
 
   <ItemGroup>

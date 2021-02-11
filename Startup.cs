@@ -40,9 +40,6 @@ namespace cms_mvc
         {
             PiranhaOptions _appOptions = _config.GetSection("piranha").Get<PiranhaOptions>();
 
-            // Add management endpoints if running on cloud foundry
-            services.AddCloudFoundryActuators(_config);
-
             // Service setup
             services.AddPiranha(options =>
             {
@@ -100,8 +97,6 @@ namespace cms_mvc
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseCloudFoundryActuators();
 
             // Initialize Piranha
             App.Init(api);
