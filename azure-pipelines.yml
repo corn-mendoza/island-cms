@@ -25,6 +25,12 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
+- stage: Push
+  displayName: Push image
+  jobs:
+  - job: Push
+    displayName: Push
+    steps:
     - task: Docker@2
       inputs:
         containerRegistry: 'harbor-islands'
@@ -32,5 +38,5 @@ stages:
     - task: Docker@2
       inputs:
         containerRegistry: 'harbor-islands'
-        repository: 'island-cms'
+        repository: 'development/island-cms'
         command: 'push'
