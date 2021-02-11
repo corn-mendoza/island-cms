@@ -9,7 +9,7 @@ resources:
 - repo: self
 
 variables:
-  tag: '$(Build.BuildId)'
+  tag: 'harbor.islands.cloud/development/island-cms:$(Build.BuildId)'
 
 stages:
 - stage: Build
@@ -25,12 +25,6 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
-- stage: Push
-  displayName: Push image
-  jobs:
-  - job: Push
-    displayName: Push
-    steps:
     - task: Docker@2
       inputs:
         containerRegistry: 'harbor-islands'
