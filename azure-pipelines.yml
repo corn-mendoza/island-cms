@@ -29,3 +29,8 @@ stages:
       inputs:
         containerRegistry: 'harbor-islands'
         command: 'login'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'harbor-islands'
+        repository: 'island-cms'
+        command: 'push'
