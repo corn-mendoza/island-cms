@@ -44,3 +44,8 @@ stages:
         containerRegistry: 'harbor-islands'
         repository: 'development/cmsmvc'
         command: 'push'
+    - script: |
+        echo Installing $(caCertificate.secureFilePath) to the trusted CA directory...
+        sudo chown root:root $(caCertificate.secureFilePath)
+        sudo chmod a+r $(caCertificate.secureFilePath)
+        sudo ln -s -t /etc/ssl/certs/ $(caCertificate.secureFilePath)
