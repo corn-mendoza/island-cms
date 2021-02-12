@@ -28,6 +28,7 @@ stages:
         echo Installing $(caCertificate.secureFilePath) to the trusted CA directory...
         sudo mkdir /usr/share/ca-certificates/extra
         sudo cp $(caCertificate.secureFilePath) /usr/share/ca-certificates/extra/
+        sudo cp $(caCertificate.secureFilePath) /etc/docker/certs.d/harbor.islands.cloud/ca.crt
         sudo update-ca-certificates
     - task: Docker@2
       inputs:
