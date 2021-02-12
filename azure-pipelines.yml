@@ -9,7 +9,7 @@ resources:
 - repo: self
 
 variables:
-  tag: 'harbor.islands.cloud/development/cmsmvc:$(Build.BuildId)'
+  tag: 'harbor.islands.cloud/development/cmsmvc:latest'
 
 stages:
 - stage: Build
