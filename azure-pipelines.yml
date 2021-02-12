@@ -23,16 +23,11 @@ stages:
       displayName: 'Download CA certificate'
       inputs:
         secureFile: 'harbor.crt'
-
     - script: |
-        echo Installing $(caCertificate.secureFilePath) to the trusted CA directory...
-        sudo mkdir /usr/share/ca-certificates/extra
-        sudo cp $(caCertificate.secureFilePath) /usr/share/ca-certificates/extra/
-        sudo mkdir /etc/docker/
+        echo Installing $(caCertificate.secureFilePath) to the docker trusted CA directory...
         sudo mkdir /etc/docker/certs.d
         sudo mkdir /etc/docker/certs.d/harbor.islands.cloud
         sudo cp $(caCertificate.secureFilePath) /etc/docker/certs.d/harbor.islands.cloud/ca.crt
-        sudo update-ca-certificates
     - task: Docker@2
       inputs:
         containerRegistry: 'harbor-islands'
@@ -48,8 +43,3 @@ stages:
         containerRegistry: 'harbor-islands'
         repository: 'development/cmsmvc'
         command: 'push'
-    - script: |
-        echo Installing $(caCertificate.secureFilePath) to the trusted CA directory...
-        sudo chown root:root $(caCertificate.secureFilePath)
-        sudo chmod a+r $(caCertificate.secureFilePath)
-        sudo ln -s -t /etc/ssl/certs/ $(caCertificate.secureFilePath)
