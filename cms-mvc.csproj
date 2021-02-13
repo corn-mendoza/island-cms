@@ -30,12 +30,15 @@
     <PackageReference Include="Steeltoe.Common.Hosting" Version="3.0.2" />
     <PackageReference Include="Microsoft.Azure.SpringCloud.Client" Version="2.0.0-preview.1" />
     <PackageReference Include="Steeltoe.Discovery.ClientCore" Version="3.0.2" />
+    <PackageReference Include="Steeltoe.Discovery.Eureka" Version="3.0.2" />
+    <PackageReference Include="Steeltoe.Discovery.Kubernetes" Version="3.0.2" />
     <PackageReference Include="Steeltoe.Management.TracingCore" Version="3.0.2" />
     <PackageReference Include="Steeltoe.Extensions.Configuration.CloudFoundryCore" Version="3.0.2" />
     <PackageReference Include="Steeltoe.Extensions.Configuration.ConfigServerCore" Version="3.0.2" />
     <PackageReference Include="Steeltoe.Extensions.Configuration.PlaceholderBase" Version="3.0.2" />
     <PackageReference Include="Steeltoe.Extensions.Logging.DynamicLogger" Version="3.0.2" />
     <PackageReference Include="Steeltoe.Management.CloudFoundryCore" Version="3.0.2" />
+    <PackageReference Include="Steeltoe.Discovery.Consul" Version="3.0.2" />
     <PackageReference Include="Steeltoe.Management.ExporterCore" Version="2.5.2" />
   </ItemGroup>
 
