@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.SpringCloud.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Steeltoe.Extensions.Logging;
-using Steeltoe.Extensions.Configuration.ConfigServer;
 using Steeltoe.Extensions.Configuration.CloudFoundry;
+using Steeltoe.Extensions.Configuration.ConfigServer;
+using Steeltoe.Extensions.Logging;
 using Steeltoe.Management.CloudFoundry;
 
 namespace cms_mvc
@@ -28,9 +24,17 @@ namespace cms_mvc
         {
             var builder = WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((context, builder) => builder.AddDynamicConsole())
+
+                // For loading when on cloud foundry
                 .AddCloudFoundryConfiguration()
                 .AddCloudFoundryActuators()
+
+                // For loading when on azure spring cloud
+                .UseAzureSpringCloudService()
+
+                // Add Config Server if available
                 .AddConfigServer()
+
                 .UseStartup<Startup>();
 
             // Load Kubernetes secrets file if available to load connection strings
