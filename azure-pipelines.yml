@@ -9,7 +9,7 @@ resources:
 - repo: self
 
 variables:
-  tag: '$(Build.BuildId)'
+  tag: 'harbor.islands.cloud/development/cmsmvc:latest'
 
 stages:
 - stage: Build
@@ -18,10 +18,24 @@ stages:
   - job: Build
     displayName: Build
     steps:
-    - task: Docker@2
-      displayName: Build an image
+    - task: DownloadSecureFile@1
+      name: caCertificate
+      displayName: 'Download CA certificate'
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
+        secureFile: 'harbor.crt'
+    - script: |
+        echo Installing $(caCertificate.secureFilePath) to the docker trusted CA directory...
+        sudo mkdir /etc/docker/certs.d
+        sudo mkdir /etc/docker/certs.d/harbor.islands.cloud
+        sudo cp $(caCertificate.secureFilePath) /etc/docker/certs.d/harbor.islands.cloud/ca.crt
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'harbor-islands'
+        repository: 'development/cmsmvc'
+        command: 'build'
+        Dockerfile: '**/Dockerfile'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'harbor-islands'
+        repository: 'development/cmsmvc'
+        command: 'push'
