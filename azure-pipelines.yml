@@ -38,7 +38,7 @@ stages:
       inputs:
         containerRegistry: 'harbor-islands'
         repository: 'development/cmsmvc'
-        tags: |
-          $(Build.BuildId)
-          latest
         command: 'push'
+        tags: |
+          latest
+          $(Build.BuildId)
