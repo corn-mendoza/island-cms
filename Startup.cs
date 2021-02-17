@@ -39,6 +39,8 @@ namespace cms_mvc
 
         public void ConfigureServices(IServiceCollection services)
         {
+            PiranhaOptions _appOptions = _config.GetSection("piranha").Get<PiranhaOptions>();
+
             // Add Session Caching function
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Production")
             {
@@ -49,8 +51,6 @@ namespace cms_mvc
                 services.AddDistributedRedisCache(_config);
             }
             services.AddSession();
-
-            PiranhaOptions _appOptions = _config.GetSection("piranha").Get<PiranhaOptions>();
 
             // Service setup
             services.AddPiranha(options =>

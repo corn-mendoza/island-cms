@@ -119,6 +119,9 @@ namespace cms_mvc.Models
                     return _envMediaStore;
                 }
 
+                if (string.IsNullOrEmpty(_mediaStorageType))
+                    return "file";
+
                 return _mediaStorageType;
             }
             set
@@ -131,7 +134,7 @@ namespace cms_mvc.Models
         {
             get
             {
-                return (MediaStorageType == "file");
+                return (MediaStorageType.ToLower() == "file");
             }
         }
 
