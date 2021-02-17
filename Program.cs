@@ -30,6 +30,14 @@ namespace cms_mvc
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             var builder = WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging((hostingContext, loggingBuilder) =>
+                {
+                    loggingBuilder.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    //loggingBuilder.AddDynamicConsole();
+
+                    // Add Serilog Dynamic Logger
+                    loggingBuilder.AddDynamicSerilog();
+                })
                 // For loading when on cloud foundry
                 .AddCloudFoundryConfiguration()
                 .AddCloudFoundryActuators()
@@ -39,6 +47,12 @@ namespace cms_mvc
 
                 // Add Config Server if available
                 .AddConfigServer()
+
+                // Load Kubernetes secrets file if available to load connection strings
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.AddJsonFile("secrets/appsettings.secrets.json", optional: true, reloadOnChange: false);
+                })
 
 #if __USE_DISCOVERY_CLIENT__
                 // Add Discovery Client
@@ -51,20 +65,6 @@ namespace cms_mvc
 
                 .UseStartup<Startup>();
 
-            // Load Kubernetes secrets file if available to load connection strings
-            builder.ConfigureAppConfiguration((hostingContext, config) =>
-            {
-                config.AddJsonFile("secrets/appsettings.secrets.json", optional: true, reloadOnChange: false);
-            });
-
-            builder.ConfigureLogging((hostingContext, loggingBuilder) =>
-            {
-                loggingBuilder.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                //loggingBuilder.AddDynamicConsole();
-
-                // Add Serilog Dynamic Logger
-                loggingBuilder.AddDynamicSerilog();
-            });
             return builder;
         }
     }
