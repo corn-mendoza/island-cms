@@ -60,17 +60,26 @@ Example appsettings.json entries:
 This application is designed to support loading an optional secrets file located in the secrets sub-folder. Additional settings can be injected by providing an `appsettings.secrets.json` file placed in the secrets folder.
 
 To add the secret, use the following command:
+
 `kubectl create secret generic <secret-name> --from-file=./appsettings.secrets.json`
 
 Add a reference to your deployment to the secret as a volume mount:
+
 `
              volumeMounts:
+	     
              - name: secrets
+             
                mountPath: /app/secrets
+	       
                readOnly: true
+	       
          volumes:
+	 
          - name: secrets
+         
            secret:
+	   
              secretName: <secret-name>
 `
 	     
