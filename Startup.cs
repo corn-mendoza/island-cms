@@ -20,6 +20,7 @@ using Piranha.AspNetCore.Identity.SQLServer;
 using Piranha.AspNetCore.Identity.SQLite;
 using Piranha.AspNetCore.Identity.MySQL;
 using Piranha.AspNetCore.Identity.PostgreSQL;
+using Steeltoe.Connector.Redis;
 
 namespace cms_mvc
 {
@@ -38,6 +39,17 @@ namespace cms_mvc
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add Session Caching function
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Production")
+            {
+                services.AddDistributedMemoryCache();
+            }
+            else
+            {
+                services.AddDistributedRedisCache(_config);
+            }
+            services.AddSession();
+
             PiranhaOptions _appOptions = _config.GetSection("piranha").Get<PiranhaOptions>();
 
             // Service setup

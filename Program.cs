@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Steeltoe.Extensions.Configuration.CloudFoundry;
 using Steeltoe.Extensions.Configuration.ConfigServer;
-using Steeltoe.Extensions.Logging;
+using Steeltoe.Extensions.Logging.DynamicSerilog;
 using Steeltoe.Management.CloudFoundry;
 
 #if __USE_DISCOVERY_CLIENT__
@@ -30,8 +30,6 @@ namespace cms_mvc
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             var builder = WebHost.CreateDefaultBuilder(args)
-                .ConfigureLogging((context, builder) => builder.AddDynamicConsole())
-
                 // For loading when on cloud foundry
                 .AddCloudFoundryConfiguration()
                 .AddCloudFoundryActuators()
@@ -62,7 +60,10 @@ namespace cms_mvc
             builder.ConfigureLogging((hostingContext, loggingBuilder) =>
             {
                 loggingBuilder.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                loggingBuilder.AddDynamicConsole();
+                //loggingBuilder.AddDynamicConsole();
+
+                // Add Serilog Dynamic Logger
+                loggingBuilder.AddDynamicSerilog();
             });
             return builder;
         }

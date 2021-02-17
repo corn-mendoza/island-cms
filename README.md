@@ -89,11 +89,17 @@ In addition to configuration services, other Steeltoe functionality will be avai
 #### Management Endpoints
 Steeltoe management endpoints are enabled for this application. Please follow the Steeltoe documentation for configuring the management endpoints on Kubernetes or Cloud Foundry. 
 
+#### Serilog Dynamic Logging Support
+Support for Serilog dynamic console logging which extends Serilog so you can configure it the same way you would Serilog. For more details on how this is done, see the section on [Serilog-Settings-Configuration](https://github.com/serilog/serilog-settings-configuration) in the Steeltoe documentation.
+
+#### Redis Session Caching Support
+Includes Redis Distributed Caching support when the environment variable ASPNETCORE_ENVIRONMENT is set to `Production`. Redis configuration information needs to be provided via the appsettings.json file or through another configuration provider depending on deployment platform. By default, distbuted memory caching will be used for session data.
+
 #### Service Discovery
 Coming soon
 
-### Redis Session Caching Support
-Coming Soon
+#### Kubernetes ConfigMap and Secrets Connector
+Coming soon
 
 ### Wavefront Integration
 Coming Soon
