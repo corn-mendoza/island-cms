@@ -102,7 +102,7 @@ Service discovery can be enabled via configuration. To enable the feature, set `
 Distributed tracing is enabled for the application. Steeltoe distributed tracing implements a solution for .NET applications using the open source OpenTelemetry project. 
 
 #### Kubernetes ConfigMap and Secrets Connector
-Enabled the use of Kubernetes ConfigMaps and Secrets via the Steeltoe Configuration provider. This provides an additional mechanism to implement environment related parameters inside of Kubernetes. See the [documentation](https://docs.steeltoe.io/api/v3/configuration/kubernetes-providers.html) on the Steeltoe site for more information on how to use this feature.
+Implemented Kubernetes ConfigMaps and Secrets providers via the Steeltoe Configuration provider. This provides an additional mechanism to implement environment related parameters inside of Kubernetes. See the [documentation](https://docs.steeltoe.io/api/v3/configuration/kubernetes-providers.html) on the Steeltoe site for more information on how to use this feature. To turn the feature on, set `Spring:Cloud:Kubernetes:Enabled=true`.
 
 ### Wavefront Integration
 On TAS, Wavefront Integration is automatically supported within the platform. With TKGI, Wavefront integration needs to be implemented within the tile in OpsManager.
