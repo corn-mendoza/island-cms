@@ -65,7 +65,7 @@ To add the secret, use the following command:
 
 Add a reference to your deployment to the secret as a volume mount:
 
-`
+
 
              volumeMounts:	     
              - name: secrets             
@@ -75,7 +75,7 @@ Add a reference to your deployment to the secret as a volume mount:
          - name: secrets         
            secret:	   
              secretName: <secret-name>
-`
+
 	     
 ### Azure DevOps Support for Self-Signed Registries
 Included in this project is an example approach to injecting the certificate needed to push an image to a private registry that is using a self-signed certificate. The pipeline can be easily modified to change the location where the certificate is stored. 
