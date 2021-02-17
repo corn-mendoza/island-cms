@@ -1,0 +1,73 @@
+﻿apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: natcms
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cmsmvc-service
+  labels:
+    app: cmsmvc
+    service: cmsmvc-service
+spec:
+  ports:
+  - name: http
+    port: 8001
+    targetPort: 80
+  selector:
+    app: cmsmvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cmsmvc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cmsmvc
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: cmsmvc
+        version: v1
+    spec:
+      serviceAccountName: natcms
+      containers:
+      - image: harbor.islands.cloud/development/cmsmvc
+        imagePullPolicy: Always
+        name: cmsmvc-container
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: secrets-cms
+          mountPath: /app/secrets
+          readOnly: true
+      volumes:
+      - name: secrets-cms
+        secret:
+          secretName: cmsmvc-appsettings
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: cmsmvc-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+    kubernetes.io/ingress.class: contour
+    kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+  - secretName: cmsmvc
+    hosts:
+    - cms.sandbox.tkgi.islands.cloud
+  rules:
+  - host: cms.sandbox.tkgi.islands.cloud
+    http:
+      paths:
+      - backend:
+          serviceName: cmsmvc-service
+          servicePort: 8001
