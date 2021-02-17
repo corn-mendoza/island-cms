@@ -84,5 +84,17 @@ Included in this project is an example approach to injecting the certificate nee
 The application includes the Steeltoe and Azure libraries and methods to load configuration data from a configuration server hosted on Kubernetes, Azure Spring Cloud Services, or Tanzu Application Services (aka Cloud Foundry). Configuration Server information must be provided in the appsettings.json file.
 
 ### Steeltoe v3 support
+In addition to configuration services, other Steeltoe functionality will be available on the appropriate deployment platforms.
+
+#### Management Endpoints
 Steeltoe management endpoints are enabled for this application. Please follow the Steeltoe documentation for configuring the management endpoints on Kubernetes or Cloud Foundry. 
+
+#### Service Discovery
+Coming soon
+
+### Redis Session Caching Support
+Coming Soon
+
+### Wavefront Integration
+Coming Soon
 
