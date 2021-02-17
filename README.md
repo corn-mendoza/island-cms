@@ -66,20 +66,14 @@ To add the secret, use the following command:
 Add a reference to your deployment to the secret as a volume mount:
 
 `
-             volumeMounts:
-	     
-             - name: secrets
-             
-               mountPath: /app/secrets
-	       
-               readOnly: true
-	       
-         volumes:
-	 
-         - name: secrets
-         
-           secret:
-	   
+
+             volumeMounts:	     
+             - name: secrets             
+               mountPath: /app/secrets	       
+               readOnly: true	       
+         volumes:	 
+         - name: secrets         
+           secret:	   
              secretName: <secret-name>
 `
 	     
