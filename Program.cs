@@ -43,16 +43,21 @@ namespace cms_mvc
                 // Add Config Server if available
                 .AddConfigServer()
 
-                // ConfigMaps and Secrets if available
-                .AddKubernetesConfiguration()
-
                 // Load Kubernetes secrets file if available to load connection strings
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.AddJsonFile("secrets/appsettings.secrets.json", optional: true, reloadOnChange: false);
-                })
+                });
 
-                .UseStartup<Startup>();
+                try
+                {
+                    builder.AddKubernetesConfiguration();
+                }
+                catch
+                {
+
+                }
+                builder.UseStartup<Startup>();
 
             return builder;
         }
