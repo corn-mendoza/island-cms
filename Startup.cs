@@ -21,12 +21,18 @@ using Piranha.AspNetCore.Identity.SQLite;
 using Piranha.AspNetCore.Identity.MySQL;
 using Piranha.AspNetCore.Identity.PostgreSQL;
 using Steeltoe.Connector.Redis;
+using Steeltoe.Discovery.Client;
+using Steeltoe.Discovery.Kubernetes;
+using Steeltoe.Discovery.Eureka;
+using Steeltoe.Discovery.Consul;
+using Steeltoe.Management.Tracing;
 
 namespace cms_mvc
 {
     public class Startup
     {
         private readonly IConfiguration _config;
+        private PiranhaOptions _appOptions;
 
         /// <summary>
         /// Default constructor.
@@ -37,20 +43,37 @@ namespace cms_mvc
             _config = configuration;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            PiranhaOptions _appOptions = _config.GetSection("piranha").Get<PiranhaOptions>();
+            // Add Distributed tracing
+            services.AddDistributedTracing(_config, builder => builder.UseZipkinWithTraceOptions(services));
+
+            _appOptions = _config.GetSection("piranha").Get<PiranhaOptions>();
 
             // Add Session Caching function
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != "Production")
-            {
-                services.AddDistributedMemoryCache();
+            if (_appOptions.EnableRedisCache)
+            {                
+                services.AddDistributedRedisCache(_config);
             }
             else
             {
-                services.AddDistributedRedisCache(_config);
+                services.AddDistributedMemoryCache();
             }
             services.AddSession();
+
+            if (_appOptions.EnableDiscoveryClient)
+            {
+                // Add Discovery Client
+                services.AddDiscoveryClient();
+                services.AddServiceDiscovery(options => options
+                    .UseEureka()
+                    .UseKubernetes()
+                    .UseConsul());
+            }
 
             // Service setup
             services.AddPiranha(options =>
@@ -108,6 +131,11 @@ namespace cms_mvc
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            if (_appOptions.EnableDiscoveryClient)
+            {
+                app.UseDiscoveryClient();
             }
 
             app.UseSession();

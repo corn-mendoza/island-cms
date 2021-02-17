@@ -13,6 +13,8 @@ namespace cms_mvc.Models
         private string _databaseFilename = "piranha.mvcweb.db";
         private string _databasePath = "./";
         private string _mediaStorageType = "file";
+        private bool _enableDiscoveryClient = false;
+        private bool _enableRedisCache = false;
 
         public bool UseDiscoveryServices { get; set; } = false;
 
@@ -129,6 +131,51 @@ namespace cms_mvc.Models
                 _mediaStorageType = value;
             }
         }
+
+        public bool EnableDiscoveryClient
+        {
+            get
+            {
+                bool _envEnableDiscovery = false;
+                var _success = bool.TryParse(Environment.GetEnvironmentVariable("PIRANHA_DISCOVERY"), out _envEnableDiscovery);
+                if (!_success)
+                {
+                    return false;
+                }
+                else
+                {
+                    _enableDiscoveryClient = _envEnableDiscovery;
+                }
+                return _enableDiscoveryClient;
+            }
+            set
+            {
+                _enableDiscoveryClient = value;
+            }
+        }
+
+        public bool EnableRedisCache
+        {
+            get
+            {
+                bool _envEnableCache = false;
+                var _success = bool.TryParse(Environment.GetEnvironmentVariable("PIRANHA_REDISCACHE"), out _envEnableCache);
+                if (!_success)
+                {
+                    return false;
+                }
+                else
+                {
+                    _enableRedisCache = _envEnableCache;
+                }
+                return _enableRedisCache;
+            }
+            set
+            {
+                _enableRedisCache = value;
+            }
+        }
+
 
         public bool UseFileStorage
         {

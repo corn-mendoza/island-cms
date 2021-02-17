@@ -96,11 +96,14 @@ Support for Serilog dynamic console logging which extends Serilog so you can con
 Includes Redis Distributed Caching support when the environment variable ASPNETCORE_ENVIRONMENT is set to `Production`. Redis configuration information needs to be provided via the appsettings.json file or through another configuration provider depending on deployment platform. By default, distbuted memory caching will be used for session data.
 
 #### Service Discovery
-Coming soon
+Service discovery can be enabled via configuration. To enable the feature, set `EnableServiceDiscovery` to `true` and add the service discovery connection options where necessary.
+
+#### Distributed Tracing
+Distributed tracing is enabled for the application. Steeltoe distributed tracing implements a solution for .NET applications using the open source OpenTelemetry project. 
 
 #### Kubernetes ConfigMap and Secrets Connector
-Coming soon
+Enabled the use of Kubernetes ConfigMaps and Secrets via the Steeltoe Configuration provider. This provides an additional mechanism to implement environment related parameters inside of Kubernetes. See the [documentation](https://docs.steeltoe.io/api/v3/configuration/kubernetes-providers.html) on the Steeltoe site for more information on how to use this feature.
 
 ### Wavefront Integration
-Coming Soon
+On TAS, Wavefront Integration is automatically supported within the platform. With TKGI, Wavefront integration needs to be implemented within the tile in OpsManager.
 

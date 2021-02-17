@@ -5,15 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Steeltoe.Extensions.Configuration.CloudFoundry;
 using Steeltoe.Extensions.Configuration.ConfigServer;
+using Steeltoe.Extensions.Configuration.Kubernetes;
 using Steeltoe.Extensions.Logging.DynamicSerilog;
 using Steeltoe.Management.CloudFoundry;
 
-#if __USE_DISCOVERY_CLIENT__
-using Steeltoe.Discovery.Client;
-using Steeltoe.Discovery.Kubernetes;
-using Steeltoe.Discovery.Eureka;
-using Steeltoe.Discovery.Consul;
-#endif
 
 namespace cms_mvc
 {
@@ -48,20 +43,14 @@ namespace cms_mvc
                 // Add Config Server if available
                 .AddConfigServer()
 
+                // ConfigMaps and Secrets if available
+                .AddKubernetesConfiguration()
+
                 // Load Kubernetes secrets file if available to load connection strings
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.AddJsonFile("secrets/appsettings.secrets.json", optional: true, reloadOnChange: false);
                 })
-
-#if __USE_DISCOVERY_CLIENT__
-                // Add Discovery Client
-                .AddDiscoveryClient()
-                .AddServiceDiscovery(options => options
-                    .UseEureka()
-                    .UseKubernetes()
-                    .UseConsul())
-#endif
 
                 .UseStartup<Startup>();
 
