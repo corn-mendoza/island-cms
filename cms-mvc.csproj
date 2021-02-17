@@ -30,7 +30,12 @@
     <PackageReference Include="Piranha.Manager.TinyMCE" Version="8.4.1" />
     <PackageReference Include="Steeltoe.Common.Hosting" Version="3.0.2" />
     <PackageReference Include="Microsoft.Azure.SpringCloud.Client" Version="2.0.0-preview.1" />
+    <PackageReference Include="Steeltoe.Connector.Abstractions" Version="3.0.2" />
+    <PackageReference Include="Steeltoe.Connector.CloudFoundry" Version="3.0.2" />
+    <PackageReference Include="Steeltoe.Connector.ConnectorBase" Version="3.0.2" />
     <PackageReference Include="Steeltoe.Connector.ConnectorCore" Version="3.0.2" />
+    <PackageReference Include="Steeltoe.Connector.EF6Core" Version="3.0.2" />
+    <PackageReference Include="Steeltoe.Connector.EFCore" Version="3.0.2" />
     <PackageReference Include="Steeltoe.Discovery.ClientCore" Version="3.0.2" />
     <PackageReference Include="Steeltoe.Discovery.Eureka" Version="3.0.2" />
     <PackageReference Include="Steeltoe.Discovery.Kubernetes" Version="3.0.2" />

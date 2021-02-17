@@ -8,7 +8,7 @@ using Steeltoe.Extensions.Configuration.ConfigServer;
 using Steeltoe.Extensions.Configuration.Kubernetes;
 using Steeltoe.Extensions.Logging.DynamicSerilog;
 using Steeltoe.Management.CloudFoundry;
-
+using Steeltoe.Connector;
 
 namespace cms_mvc
 {
@@ -33,6 +33,7 @@ namespace cms_mvc
                     // Add Serilog Dynamic Logger
                     loggingBuilder.AddDynamicSerilog();
                 })
+
                 // For loading when on cloud foundry
                 .AddCloudFoundryConfiguration()
                 .AddCloudFoundryActuators()
@@ -42,6 +43,11 @@ namespace cms_mvc
 
                 // Add Config Server if available
                 .AddConfigServer()
+
+                // Load all the connection strings for bound services via Steeltoe connectors which benefits TAS developers
+                //    - Also supports Azure Service Broker service bindings via STv3
+                //    - This approach allows for multiple database connections for the same datavase type using connection string names
+                .ConfigureAppConfiguration(builder => builder.AddConnectionStrings())
 
                 // Load Kubernetes secrets file if available to load connection strings
                 .ConfigureAppConfiguration((hostingContext, config) =>
