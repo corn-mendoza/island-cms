@@ -1,8 +1,8 @@
 # Island CMS
-CMS Portal built using Piranha CMS frameworks and modified for Container deployments
+CMS Portal built using Piranha CMS frameworks and modified for Container deployments. Check out the great work of the community [here](https://piranhacms.org/).
 
 ## Overview
-This application is built using .NET Core 3.1 and CMS frameworks developed by Piranha CMS Open Source project. The application is designed to use an NFS mount to store media and SQL Server to store application data.
+This application is built using .NET Core 3.1 and CMS frameworks developed by Piranha CMS Open Source project. The application is designed to use an NFS mount or persistent storage in containers to store media and SQL Server to store application data. The application can load configuration data from multiple sources including a configuration server hosted on Cloud Foundry, Kubernetes, or Azure Spring Cloud Services. 
 
 ## Objectives
 
@@ -58,3 +58,28 @@ Example appsettings.json entries:
 
 ### Secrets Support
 This application is designed to support loading an optional secrets file located in the secrets sub-folder. Additional settings can be injected by providing an `appsettings.secrets.json` file placed in the secrets folder.
+
+To add the secret, use the following command:
+`kubectl create secret generic <secret-name> --from-file=./appsettings.secrets.json`
+
+Add a reference to your deployment to the secret as a volume mount:
+'
+             volumeMounts:
+             - name: secrets
+               mountPath: /app/secrets
+               readOnly: true
+         volumes:
+         - name: secrets
+           secret:
+             secretName: <secret-name>
+'
+	     
+### Azure DevOps Support for Self-Signed Registries
+Included in this project is an example approach to injecting the certificate needed to push an image to a private registry that is using a self-signed certificate. The pipeline can be easily modified to change the location where the certificate is stored. 
+
+### Kubrenetes, Cloud Foundry, and Azure Spring Cloud Services Config Server Support
+The application includes the Steeltoe and Azure libraries and methods to load configuration data from a configuration server hosted on Kubernetes, Azure Spring Cloud Services, or Tanzu Application Services (aka Cloud Foundry). Configuration Server information must be provided in the appsettings.json file.
+
+### Steeltoe v3 support
+Steeltoe management endpoints are enabled for this application. Please follow the Steeltoe documentation for configuring the management endpoints on Kubernetes or Cloud Foundry. 
+
