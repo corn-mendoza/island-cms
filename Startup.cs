@@ -110,6 +110,8 @@ namespace cms_mvc
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSession();
+
             // Initialize Piranha
             App.Init(api);
 
