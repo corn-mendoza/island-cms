@@ -1,30 +1,24 @@
+using cms_mvc.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using Steeltoe.Management.CloudFoundry;
-using Microsoft.Extensions.Logging;
-using cms_mvc.Models;
 using Piranha;
+using Piranha.AspNetCore.Identity.SQLite;
+using Piranha.AspNetCore.Identity.SQLServer;
 using Piranha.AttributeBuilder;
-using Piranha.Manager.Editor;
-using Piranha.Azure;
 using Piranha.Data.EF.MySql;
+using Piranha.Data.EF.PostgreSql;
 using Piranha.Data.EF.SQLite;
 using Piranha.Data.EF.SQLServer;
-using Piranha.Data.EF.PostgreSql;
-using Piranha.AspNetCore.Identity.SQLServer;
-using Piranha.AspNetCore.Identity.SQLite;
-using Piranha.AspNetCore.Identity.MySQL;
-using Piranha.AspNetCore.Identity.PostgreSQL;
+using Piranha.Manager.Editor;
 using Steeltoe.Connector.Redis;
 using Steeltoe.Discovery.Client;
-using Steeltoe.Discovery.Kubernetes;
-using Steeltoe.Discovery.Eureka;
 using Steeltoe.Discovery.Consul;
+using Steeltoe.Discovery.Eureka;
+using Steeltoe.Discovery.Kubernetes;
 using Steeltoe.Management.Tracing;
 
 namespace cms_mvc
@@ -49,6 +43,7 @@ namespace cms_mvc
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+
             // Add Distributed tracing
             services.AddDistributedTracing(_config, builder => builder.UseZipkinWithTraceOptions(services));
 
@@ -87,7 +82,11 @@ namespace cms_mvc
                 if (_appOptions.UseFileStorage)
                     options.UseFileStorage(basePath: _appOptions.BasePath, baseUrl: _appOptions.BaseUrl, naming: Piranha.Local.FileStorageNaming.UniqueFolderNames);
                 else
+                {
                     options.UseBlobStorage(_config.GetConnectionString("piranha-media"));
+                    services.AddHealthChecks()
+                        .AddAzureBlobStorage(_config.GetConnectionString("piranha-media"));
+                }
 
                 options.UseImageSharp();
                 options.UseManager();
@@ -101,6 +100,8 @@ namespace cms_mvc
                             db.UseMySql(_config.GetConnectionString("piranha")));
                         options.UseIdentityWithSeed<IdentitySQLServerDb>(db =>
                             db.UseMySql(_config.GetConnectionString("piranha")));
+                        services.AddHealthChecks()
+                            .AddMySql(_config.GetConnectionString("piranha"));
                         break;
 
                     case "postgres":
@@ -108,6 +109,8 @@ namespace cms_mvc
                             db.UseNpgsql(_config.GetConnectionString("piranha")));
                         options.UseIdentityWithSeed<IdentitySQLServerDb>(db =>
                             db.UseNpgsql(_config.GetConnectionString("piranha")));
+                        services.AddHealthChecks()
+                            .AddNpgSql(_config.GetConnectionString("piranha"));
                         break;
 
                     case "sqlserver":
@@ -115,6 +118,9 @@ namespace cms_mvc
                             db.UseSqlServer(_config.GetConnectionString("piranha")));
                         options.UseIdentityWithSeed<IdentitySQLServerDb>(db =>
                             db.UseSqlServer(_config.GetConnectionString("piranha")));
+                        services.AddHealthChecks()
+                            .AddSqlServer(_config.GetConnectionString("piranha"));
+
                         break;
 
                     default:
@@ -122,6 +128,8 @@ namespace cms_mvc
                             db.UseSqlite("Filename="+_appOptions.DatabaseFilePath));
                         options.UseIdentityWithSeed<IdentitySQLiteDb>(db =>
                             db.UseSqlite("Filename="+_appOptions.DatabaseFilePath));
+                        services.AddHealthChecks()
+                            .AddSqlite("Filename=" + _appOptions.DatabaseFilePath);
                         break;
 
                 }
