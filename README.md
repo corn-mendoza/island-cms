@@ -12,6 +12,7 @@ This application is built using .NET Core 3.1 and CMS frameworks developed by Pi
 - Support both Cloud Foundry and Kubernetes based deployments from a single set of source code
 
 ## Installation
+The simplest deployment for the application is to set the database and media types to file. In this case, all data will be lost when the container is restarted or redeployed.
 
 ### Volume Mounts
 One difference between cloud foundry and kubernetes deployments is when nfs mounts are done during the container deployment stage. On cloud foundry, volume mounts occur at the start of the the container deployment process while on kubernetes, volume mounts are attached after the application is staged. Because of this, you cannot nfs mount a volume to a sub-folder of the application. This can cause issues for applications dependent on subfolders to be located in a specific location on cloud foundry. In this application, that is the case for the base URL. The base URL must point to a sub-folder of the application. To resolve this, the start command in the manifest has been modified to create a symbolic link to the nfs location. The start command in the manifest file will need to be modified if the volume is mounted in a different location than `/home/media`.
@@ -48,7 +49,10 @@ Example appsettings.json entries:
 		  "DatabasePath": ".",
 		  "BasePath": "wwwroot/uploads",
 		  "BaseUrl": "~/uploads/",
-		  "MediaStorageType": "file"
+		  "MediaStorageType": "file",
+		  "EnableDiscoveryClient": false,
+		  "EnableRedisCache": false,
+		  "EnableSessionCache": false
 		},
 		"ConnectionStrings": {
 		  "piranha": "Server=sqlserver;Database=island_cms;UID=piranha_user;Password=password",

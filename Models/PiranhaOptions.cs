@@ -15,6 +15,7 @@ namespace cms_mvc.Models
         private string _mediaStorageType = "file";
         private bool _enableDiscoveryClient = false;
         private bool _enableRedisCache = false;
+        private bool _enableSessionCache = false;
 
         public bool UseDiscoveryServices { get; set; } = false;
 
@@ -173,6 +174,28 @@ namespace cms_mvc.Models
             set
             {
                 _enableRedisCache = value;
+            }
+        }
+
+        public bool EnableSessionCache
+        {
+            get
+            {
+                bool _envEnableCache = false;
+                var _success = bool.TryParse(Environment.GetEnvironmentVariable("PIRANHA_REDISCACHE"), out _envEnableCache);
+                if (!_success)
+                {
+                    return false;
+                }
+                else
+                {
+                    _enableSessionCache = _envEnableCache;
+                }
+                return _enableSessionCache;
+            }
+            set
+            {
+                _enableSessionCache = value;
             }
         }
 

@@ -54,16 +54,20 @@ namespace cms_mvc
 
             _appOptions = _config.GetSection("piranha").Get<PiranhaOptions>();
 
-            // Add Session Caching function
-            if (_appOptions.EnableRedisCache)
-            {                
-                services.AddDistributedRedisCache(_config);
-            }
-            else
+            // Enabling session caching for the admin functionality is not recommended - ideally, a second singleton container would be deployed to allow for management functions
+            if (_appOptions.EnableSessionCache)
             {
-                services.AddDistributedMemoryCache();
+                // Add Session Caching function
+                if (_appOptions.EnableRedisCache)
+                {
+                    services.AddDistributedRedisCache(_config);
+                }
+                else
+                {
+                    services.AddDistributedMemoryCache();
+                }
+                services.AddSession();
             }
-            services.AddSession();
 
             if (_appOptions.EnableDiscoveryClient)
             {
@@ -138,7 +142,10 @@ namespace cms_mvc
                 app.UseDiscoveryClient();
             }
 
-            app.UseSession();
+            if (_appOptions.EnableSessionCache)
+            {
+                app.UseSession();
+            }
 
             // Initialize Piranha
             App.Init(api);
