@@ -16,6 +16,7 @@ namespace cms_mvc.Models
         private bool _enableDiscoveryClient = false;
         private bool _enableRedisCache = false;
         private bool _enableSessionCache = false;
+        private bool _enableHealthUI = false;
 
         public bool UseDiscoveryServices { get; set; } = false;
 
@@ -182,7 +183,7 @@ namespace cms_mvc.Models
             get
             {
                 bool _envEnableCache = false;
-                var _success = bool.TryParse(Environment.GetEnvironmentVariable("PIRANHA_REDISCACHE"), out _envEnableCache);
+                var _success = bool.TryParse(Environment.GetEnvironmentVariable("PIRANHA_SESSIONCACHE"), out _envEnableCache);
                 if (!_success)
                 {
                     return false;
@@ -199,6 +200,27 @@ namespace cms_mvc.Models
             }
         }
 
+        public bool EnableHealthUI
+        {
+            get
+            {
+                bool _envEnableUI = false;
+                var _success = bool.TryParse(Environment.GetEnvironmentVariable("PIRANHA_HEALTHUI"), out _envEnableUI);
+                if (!_success)
+                {
+                    return false;
+                }
+                else
+                {
+                    _enableHealthUI = _envEnableUI;
+                }
+                return _enableHealthUI;
+            }
+            set
+            {
+                _enableHealthUI = value;
+            }
+        }
 
         public bool UseFileStorage
         {

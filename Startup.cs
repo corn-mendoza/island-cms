@@ -21,6 +21,8 @@ using Steeltoe.Discovery.Eureka;
 using Steeltoe.Discovery.Kubernetes;
 using Steeltoe.Management.Tracing;
 
+
+
 namespace cms_mvc
 {
     public class Startup
@@ -72,6 +74,13 @@ namespace cms_mvc
                     .UseEureka()
                     .UseKubernetes()
                     .UseConsul());
+            }
+
+            if (_appOptions.EnableHealthUI)
+            {
+                services
+                    .AddHealthChecksUI()
+                    .AddInMemoryStorage();
             }
 
             // Service setup
@@ -166,6 +175,14 @@ namespace cms_mvc
 
             // Configure Tiny MCE
             EditorConfig.FromFile("editorconfig.json");
+
+            if (_appOptions.EnableHealthUI)
+            {
+                app.UseEndpoints(config =>
+                {
+                    config.MapHealthChecksUI();
+                });
+            }
 
             // Middleware setup
             app.UsePiranha(options => {

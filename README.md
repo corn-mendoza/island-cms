@@ -6,10 +6,14 @@ This application is built using .NET Core 3.1 and CMS frameworks developed by Pi
 
 ## Objectives
 
+- One .NET Core code base to deploy to multiple deploment scenarios (container, VM, server) using different types of backends (file, SQL Server, MySQL, Postgres, SQLite) on Linux or Windows
+- Demonstrate 12 factor patterns utilizing native .NET and Steeltoe libraries
 - Use NFS volume mounts with .NET Core application deployments to persist content
 - Implement a simple configuration based application options support for different deployment options
 - Provide the ability to override configuration file data with environment variables injected using config maps implemented through a single options class
 - Support both Cloud Foundry and Kubernetes based deployments from a single set of source code
+- Support bindable services using the marketplace in cloud foundry and config maps for kubernetes via Steeltoe connectors
+- Enable health checks and other management capabilities enabled by Steeltoe v3
 
 ## Installation
 The simplest deployment for the application is to set the database and media types to file. In this case, all data will be lost when the container is restarted or redeployed.
@@ -36,7 +40,12 @@ By default, the environment variables will always override configuration setting
 - PIRANHA_MEDIASTORE - Media storage type 
 	- Valid Values: file (default) | azure
 	- Parameters: Connection String provided in appsettings.json or secrets
-
+- PIRANHA_SESSIONCACHE - Enable session caching 
+	- Valid Values: false (default) | true
+- PIRANHA_REDISCACHE - Use Redis connector for session caching 
+	- Valid Values: false (default - use distributed memory cache) | true
+- PIRANHA_HEALTHUI - Enable Health Check UI endpoint 
+	- Valid Values: false (default) | true
 
 ### Available Configuration via appsettings.json
 The application can be configured using the standard .NET Core configuration files.
@@ -52,7 +61,8 @@ Example appsettings.json entries:
 		  "MediaStorageType": "file",
 		  "EnableDiscoveryClient": false,
 		  "EnableRedisCache": false,
-		  "EnableSessionCache": false
+		  "EnableSessionCache": false,
+		  "EnableHealthUI": false
 		},
 		"ConnectionStrings": {
 		  "piranha": "Server=sqlserver;Database=island_cms;UID=piranha_user;Password=password",
