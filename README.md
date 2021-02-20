@@ -16,10 +16,10 @@ This application is built using .NET Core 3.1 and CMS frameworks developed by Pi
 - Enable health checks and other management capabilities enabled by Steeltoe v3
 
 ## CI/CD
-This repo is tied to two Azure DevOps pipelines to demonstrate continuous integration. The Kuberentes pipeline is also tied to ArgoCD for deployments. At this time, these canaries can be found here:
+This repo is tied to two Azure DevOps pipelines to demonstrate continuous integration. The Kuberentes pipeline is also tied to [ArgoCD](https://argoproj.github.io/argo-cd/) for deployments. At this time, these canaries can be found here:
 
-- TAS: https://cms.apps.tas.islands.cloud
-- K8s: https://cms.sandbox.tkgi.islands.cloud
+- TAS/CF: https://cms.apps.tas.islands.cloud
+- TKGI/K8s: https://cms.sandbox.tkgi.islands.cloud
 
 ## Installation
 The simplest deployment for the application is to set the database and media types to file. In this case, all data will be lost when the container is restarted or redeployed.
@@ -130,4 +130,4 @@ On TAS, Wavefront Integration is automatically supported within the platform. Wi
 ## Known Issues
 This application relies on the upstream code from Pirahna.org and there is no intention to fix bugs in the upstream releases. If you would like to help fix these issues, you should consider getting involved in Pirahna.org.
 
-- You may run into an issue updating the sub-text on pages where the any updated text will not be saved. This is a reported bug in the main repo. To workaround this issue, you can add a content field at the top of the page and update the text in that component. Click on the page sub-text and then back on the content pane. The sub-text should get updated and you can now delete the content part that was added. Save and Publish the page.
+- You may run into an issue updating the sub-text on pages where any updated text will not be saved. This is a reported bug in the main repo. To workaround this issue, you can add a content field at the top of the page and update the text in that component. Click on the page sub-text and then back on the content pane. The sub-text should get updated and you can now delete the content part that was added. Save and Publish the page.
