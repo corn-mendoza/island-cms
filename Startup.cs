@@ -30,6 +30,14 @@ namespace cms_mvc
         private readonly IConfiguration _config;
         private PiranhaOptions _appOptions;
 
+        public IConfiguration Configuration
+        {
+            get
+            {
+                return _config;
+            }
+        }
+
         /// <summary>
         /// Default constructor.
         /// </summary>
