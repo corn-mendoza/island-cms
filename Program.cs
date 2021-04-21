@@ -46,12 +46,12 @@ namespace cms_mvc
 
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    // Load Kubernetes secrets file if available to load connection strings
+                    // Load optional secrets file if available to load connection strings
                     config.AddJsonFile("secrets/appsettings.secrets.json", optional: true, reloadOnChange: false);
 
                     // Load all the connection strings for bound services via Steeltoe connectors which benefits TAS developers
                     //    - Also supports Azure Service Broker service bindings via STv3
-                    //    - This approach allows for multiple database connections for the same datavase type using connection string names
+                    //    - This approach allows for multiple database connections for the same database type using connection string names
                     config.AddConnectionStrings();
                 });
 
