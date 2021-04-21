@@ -2,6 +2,10 @@ applications:
 - name: cms
   buildpacks:
   - dotnet_core_buildpack
+  services:
+  - piranha
+  - piranha-media
   env:
     ASPNETCORE_ENVIRONMENT: Production
+    piranha_media: DefaultEndpointsProtocol=https;AccountName=piranhademo;AccountKey=bHBSYGHzyXaMkPXhBxaJHQdf9dHSbUfX4KGAAmFdOFq4rnpr6NYF1J3n1lai0ZVEI/Omx07pL8C5/t2KQ/nlMg==;EndpointSuffix=core.windows.net
 

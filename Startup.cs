@@ -1,3 +1,4 @@
+using System;
 using cms_mvc.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +15,7 @@ using Piranha.Data.EF.PostgreSql;
 using Piranha.Data.EF.SQLite;
 using Piranha.Data.EF.SQLServer;
 using Piranha.Manager.Editor;
+using Pivotal.Helper;
 using Steeltoe.Connector.Redis;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Discovery.Consul;
@@ -100,7 +102,16 @@ namespace cms_mvc
                     options.UseFileStorage(basePath: _appOptions.BasePath, baseUrl: _appOptions.BaseUrl, naming: Piranha.Local.FileStorageNaming.UniqueFolderNames);
                 else
                 {
-                    options.UseBlobStorage(_config.GetConnectionString("piranha-media"));
+                    var _blob_connect = Environment.GetEnvironmentVariable("piranha_media");
+
+                    CFEnvironmentVariables _cfEnv = new CFEnvironmentVariables();
+                    var _azure_bind = _cfEnv.getAzureStorageCredentials("azure-storage", "piranha-media");
+                    if (!(_azure_bind is null))
+                        _blob_connect = _azure_bind.ConnectionString;
+
+                    if (string.IsNullOrEmpty(_blob_connect))
+                        _blob_connect = _config.GetConnectionString("piranha-media");
+                    options.UseBlobStorage(_blob_connect);
                     services.AddHealthChecks()
                         .AddAzureBlobStorage(_config.GetConnectionString("piranha-media"));
                 }
