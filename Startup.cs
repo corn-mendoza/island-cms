@@ -106,14 +106,14 @@ namespace cms_mvc
 
                     CFEnvironmentVariables _cfEnv = new CFEnvironmentVariables();
                     var _azure_bind = _cfEnv.getAzureStorageCredentials("azure-storage", "piranha-media");
-                    if (!(_azure_bind is null))
+                    if (_azure_bind != null)
                         _blob_connect = _azure_bind.ConnectionString;
 
                     if (string.IsNullOrEmpty(_blob_connect))
                         _blob_connect = _config.GetConnectionString("piranha-media");
                     options.UseBlobStorage(_blob_connect);
                     services.AddHealthChecks()
-                        .AddAzureBlobStorage(_config.GetConnectionString("piranha-media"));
+                        .AddAzureBlobStorage(_blob_connect);
                 }
 
                 options.UseImageSharp();
