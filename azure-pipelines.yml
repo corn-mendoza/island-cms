@@ -30,7 +30,7 @@ stages:
 #        sudo cp $(caCertificate.secureFilePath) /etc/docker/certs.d/harbor.islands.cloud/ca.crt
     - task: Docker@2
       inputs:
-        containerRegistry: 'tanzume'
+        containerRegistry: 'tanzumeaks'
         repository: 'development/cmsmvc'
         command: 'build'
         Dockerfile: '**/Dockerfile'
@@ -39,7 +39,7 @@ stages:
           $(Build.BuildId)
     - task: Docker@2
       inputs:
-        containerRegistry: 'tanzume'
+        containerRegistry: 'tanzumeaks'
         repository: 'development/cmsmvc'
         command: 'push'
         tags: |
