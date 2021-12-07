@@ -9,6 +9,7 @@ using Steeltoe.Extensions.Configuration.Kubernetes;
 using Steeltoe.Extensions.Logging.DynamicSerilog;
 using Steeltoe.Management.CloudFoundry;
 using Steeltoe.Connector;
+using Steeltoe.Management.Endpoint;
 
 namespace cms_mvc
 {
@@ -35,8 +36,7 @@ namespace cms_mvc
                 })
 
                 // For loading when on cloud foundry
-                .AddCloudFoundryConfiguration()
-                .AddCloudFoundryActuators()
+                .AddAllActuators()
 
                 // For loading when on azure spring cloud
                 .UseAzureSpringCloudService()

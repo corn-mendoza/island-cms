@@ -57,7 +57,7 @@ namespace cms_mvc
         {
 
             // Add Distributed tracing
-            services.AddDistributedTracing(_config, builder => builder.UseZipkinWithTraceOptions(services));
+            services.AddDistributedTracing();
 
             _appOptions = _config.GetSection("piranha").Get<PiranhaOptions>();
 
@@ -177,10 +177,10 @@ namespace cms_mvc
                 app.UseDeveloperExceptionPage();
             }
 
-            if (_appOptions.EnableDiscoveryClient)
-            {
-                app.UseDiscoveryClient();
-            }
+            //if (_appOptions.EnableDiscoveryClient)
+            //{
+            //    app.UseDiscoveryClient();
+            //}
 
             if (_appOptions.EnableSessionCache)
             {
