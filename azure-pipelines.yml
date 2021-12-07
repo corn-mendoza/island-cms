@@ -18,19 +18,19 @@ stages:
   - job: Build
     displayName: Build
     steps:
-    - task: DownloadSecureFile@1
-      name: caCertificate
-      displayName: 'Download CA certificate'
-      inputs:
-        secureFile: 'harbor.crt'
-    - script: |
-        echo Installing $(caCertificate.secureFilePath) to the docker trusted CA directory...
-        sudo mkdir /etc/docker/certs.d
-        sudo mkdir /etc/docker/certs.d/harbor.islands.cloud
-        sudo cp $(caCertificate.secureFilePath) /etc/docker/certs.d/harbor.islands.cloud/ca.crt
+#    - task: DownloadSecureFile@1
+#      name: caCertificate
+#      displayName: 'Download CA certificate'
+#      inputs:
+#        secureFile: 'harbor.crt'
+#    - script: |
+#        echo Installing $(caCertificate.secureFilePath) to the docker trusted CA directory...
+#        sudo mkdir /etc/docker/certs.d
+#        sudo mkdir /etc/docker/certs.d/harbor.islands.cloud
+#        sudo cp $(caCertificate.secureFilePath) /etc/docker/certs.d/harbor.islands.cloud/ca.crt
     - task: Docker@2
       inputs:
-        containerRegistry: 'harbor-islands'
+        containerRegistry: 'tanzumeaks'
         repository: 'development/cmsmvc'
         command: 'build'
         Dockerfile: '**/Dockerfile'
@@ -39,7 +39,7 @@ stages:
           $(Build.BuildId)
     - task: Docker@2
       inputs:
-        containerRegistry: 'harbor-islands'
+        containerRegistry: 'tanzumeaks'
         repository: 'development/cmsmvc'
         command: 'push'
         tags: |

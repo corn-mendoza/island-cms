@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: "tanzume-7e9f"
+    labels:
+        app: "tanzume-7e9f"
+    annotations:
+        kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+    rules:
+        - host: island-cms-tanzume-7e9f.97b6b2c59df84450928b.centralus.aksapp.io
+          http:
+            paths:
+            - path: /
+              backend:
+                serviceName: "tanzume-7e9f"
+                servicePort: 80
