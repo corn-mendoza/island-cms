@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: "tanzume-7e9f"
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: "tanzume-7e9f"
