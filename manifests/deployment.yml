@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "tanzume-7e9f"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "tanzume-7e9f"
+  template:
+    metadata:
+      labels:
+        app: "tanzume-7e9f"
+    spec:
+      containers:
+        - name: "tanzume-7e9f"
+          image: "tanzumeaks.azurecr.io/tanzume"
+          ports:
+          - containerPort: 80
