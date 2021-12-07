@@ -111,9 +111,13 @@ namespace cms_mvc
 
                     if (string.IsNullOrEmpty(_blob_connect))
                         _blob_connect = _config.GetConnectionString("piranha-media");
-                    options.UseBlobStorage(_blob_connect);
-                    services.AddHealthChecks()
-                        .AddAzureBlobStorage(_blob_connect);
+
+                    if (!string.IsNullOrEmpty(_blob_connect))
+                    {
+                        options.UseBlobStorage(_blob_connect);
+                        services.AddHealthChecks()
+                            .AddAzureBlobStorage(_blob_connect);
+                    }
                 }
 
                 options.UseImageSharp();
