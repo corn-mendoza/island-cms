@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: island-cms-config
+data:
+  database_type: "file"
+  database_name: "piranha.db"
+  database_path: "."
+  media_file_path: "./uploads/"
+  media_base_url: "~/uploads/"
+  media_storage_type: "file"
+  enable_session_cache: "false"
+  enable_redis_cache: "false"
+  enable_healthcheck_ui: "false"

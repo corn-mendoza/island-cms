@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: island-cms-sa
+  labels:
+    app: island-cms-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: island-cms-deployment
+  name: island-cms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: island-cms-app
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: island-cms-app
+        tier: frontend
+    spec:
+      serviceAccountName: island-cms-sa
+      containers:
+      - image: cjmendoza/cmsmvc
+        name: island-cms-app
+        imagePullPolicy: Always
+        env:
+          - name: PIRANHA_DBTYPE
+            valueFrom:
+              configMapKeyRef:
+                name: island-cms-config
+                key: database_type
+                optional: true
+          - name: PIRANHA_DBNAME
+            valueFrom:
+              configMapKeyRef:
+                name: island-cms-config
+                key: database_name
+                optional: true
+          - name: PIRANHA_DBPATH
+            valueFrom:
+              configMapKeyRef:
+                name: island-cms-config
+                key: database_path
+                optional: true
+          - name: PIRANHA_BASEPATH
+            valueFrom:
+              configMapKeyRef:
+                name: island-cms-config
+                key: media_file_path
+                optional: true
+          - name: PIRANHA_BASEURL
+            valueFrom:
+              configMapKeyRef:
+                name: island-cms-config
+                key: media_base_url
+                optional: true
+          - name: PIRANHA_MEDIASTORE
+            valueFrom:
+              configMapKeyRef:
+                name: island-cms-config
+                key: media_storage_type
+                optional: true
+          - name: PIRANHA_SESSIONCACHE
+            valueFrom:
+              configMapKeyRef:
+                name: island-cms-config
+                key: enable_session_cache
+                optional: true
+          - name: PIRANHA_REDISCACHE
+            valueFrom:
+              configMapKeyRef:
+                name: island-cms-config
+                key: enable_redis_cache
+                optional: true
+          - name: PIRANHA_HEALTHUI
+            valueFrom:
+              configMapKeyRef:
+                name: island-cms-config
+                key: enable_healthcheck_ui
+                optional: true
+        ports:
+        - containerPort: 80
+          hostPort: 8081
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "1"
+          limits:
+            memory: "512Mi"
+            cpu: "2"
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+          readOnly: true
+        - name: uploads
+          mountPath: "/uploads"
+          readOnly: false
+      volumes:
+        - name: config
+          configMap:
+            name: island-cms-config
+            optional: true
+        - name: uploads
+  

@@ -36,7 +36,7 @@ spec:
     spec:
       serviceAccountName: natcms
       containers:
-      - image: harbor.islands.cloud/development/cmsmvc
+      - image: hub.docker.io/cjmendoza/cmsmvc
         imagePullPolicy: Always
         name: cmsmvc-container
         ports:
@@ -63,9 +63,9 @@ spec:
   tls:
   - secretName: cmsmvc
     hosts:
-    - cms.sandbox.tkgi.islands.cloud
+    - cms.islands.cloud
   rules:
-  - host: cms.sandbox.tkgi.islands.cloud
+  - host: cms.islands.cloud
     http:
       paths:
       - backend:
