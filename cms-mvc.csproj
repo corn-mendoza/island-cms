@@ -65,6 +65,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="cms_manifest.yml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="manifest.yml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
