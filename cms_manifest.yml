@@ -1,0 +1,10 @@
+applications:
+- name: cms
+  buildpacks:
+  - dotnet_core_buildpack
+  disk_quota: 500M
+  instances: 1
+  memory: 256M
+  routes:
+  - route: cms.apps.tas.uat.lnd.hclcnlabs.com
+  stack: cflinuxfs3
