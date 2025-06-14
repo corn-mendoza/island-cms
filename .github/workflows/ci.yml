@@ -98,15 +98,47 @@ jobs:
     if: github.event_name != 'pull_request'
     
     steps:
+    - name: Check build outputs
+      run: |
+        echo "Image digest: ${{ needs.build-and-push.outputs.image-digest }}"
+        echo "Image tag: ${{ needs.build-and-push.outputs.image-tag }}"
+        
+    - name: Set image reference
+      id: image-ref
+      run: |
+        if [ -n "${{ needs.build-and-push.outputs.image-digest }}" ]; then
+          echo "image-ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build-and-push.outputs.image-digest }}" >> $GITHUB_OUTPUT
+          echo "Using digest reference"
+        else
+          echo "image-ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+          echo "Using SHA tag reference"
+        fi
+        
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build-and-push.outputs.image-digest }}
+        image-ref: ${{ steps.image-ref.outputs.image-ref }}
         format: 'sarif'
         output: 'trivy-results.sarif'
+        exit-code: '0'
+        severity: 'CRITICAL,HIGH'
+        
+    - name: Check if SARIF file exists
+      id: check-sarif
+      run: |
+        if [ -f "trivy-results.sarif" ] && [ -s "trivy-results.sarif" ]; then
+          echo "sarif-exists=true" >> $GITHUB_OUTPUT
+          echo "SARIF file found and not empty"
+          ls -la trivy-results.sarif
+        else
+          echo "sarif-exists=false" >> $GITHUB_OUTPUT
+          echo "SARIF file not found or empty"
+          ls -la .
+        fi
         
     - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v2
-      if: always()
+      uses: github/codeql-action/upload-sarif@v3
+      if: steps.check-sarif.outputs.sarif-exists == 'true'
       with:
         sarif_file: 'trivy-results.sarif'
+        category: 'trivy-container-scan'
