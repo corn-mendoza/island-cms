@@ -1,7 +1,7 @@
 # Multi-stage Dockerfile for Island CMS v2.0.0 (.NET 8.0)
 
 # Runtime stage - Use latest .NET 8.0 runtime with latest security patches
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.12-alpine3.20 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
@@ -15,7 +15,7 @@ RUN apk update && apk upgrade && \
     adduser --system --uid 1001 --ingroup dotnet --shell /bin/false dotnet
 
 # Build stage - Use latest .NET 8.0 SDK with latest security patches
-FROM mcr.microsoft.com/dotnet/sdk:8.0.12-alpine3.20 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 WORKDIR /src
 
 # Copy project file and restore dependencies
