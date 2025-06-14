@@ -89,9 +89,13 @@ namespace cms_mvc.Controllers
                 }
                 return View(model);
             }
-            catch
+            catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
+            }
+            catch
+            {
+                return NotFound();
             }
         }
 
@@ -104,6 +108,12 @@ namespace cms_mvc.Controllers
         [Route("post/comment")]
         public async Task<IActionResult> SavePostComment(SaveCommentModel commentModel)
         {
+            // Validate model state
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 var model = await _loader.GetPostAsync<StandardPost>(commentModel.Id, HttpContext.User);
@@ -130,6 +140,12 @@ namespace cms_mvc.Controllers
             catch (UnauthorizedAccessException)
             {
                 return Unauthorized();
+            }
+            catch (Exception)
+            {
+                // Log the error if logging is available
+                // For now, return a generic error response
+                return StatusCode(500, "An error occurred while saving the comment");
             }
         }
     }

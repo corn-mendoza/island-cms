@@ -45,12 +45,19 @@ namespace cms_mvc
                         .UseAzureSpringCloudService()
                         
                         // Add Config Server if available
-                        .AddConfigServer()
+                        .AddConfigServer();
                         
-                        // Load Config values for K8s
-                        .AddKubernetesConfiguration()
+                    // Load Config values for K8s - only if available
+                    try
+                    {
+                        webBuilder.AddKubernetesConfiguration();
+                    }
+                    catch
+                    {
+                        // Kubernetes configuration not available, continue without it
+                    }
                         
-                        .UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }

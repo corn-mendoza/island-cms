@@ -6,8 +6,9 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-# Create non-root user for security
-RUN addgroup --system --gid 1001 dotnet \
+# Install curl for health checks and create non-root user for security
+RUN apk add --no-cache curl \
+    && addgroup --system --gid 1001 dotnet \
     && adduser --system --uid 1001 --ingroup dotnet --shell /bin/false dotnet
 
 # Build stage

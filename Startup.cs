@@ -103,7 +103,7 @@ namespace cms_mvc
                     options.UseFileStorage(basePath: _appOptions.BasePath, baseUrl: _appOptions.BaseUrl, naming: Piranha.Local.FileStorageNaming.UniqueFolderNames);
                 else
                 {
-                    var _blob_connect = Environment.GetEnvironmentVariable("piranha_media");
+                    var _blob_connect = Environment.GetEnvironmentVariable("PIRANHA_MEDIA_CONNECTION");
 
                     CFEnvironmentVariables _cfEnv = new CFEnvironmentVariables();
                     var _azure_bind = _cfEnv.getAzureStorageCredentials("azure-storage", "piranha-media");
@@ -129,31 +129,43 @@ namespace cms_mvc
                 switch (_appOptions.DatabaseType)
                 {
                     case "mysql":
+                        var mysqlConnectionString = _config.GetConnectionString("piranha");
+                        if (string.IsNullOrEmpty(mysqlConnectionString))
+                            throw new InvalidOperationException("MySQL connection string 'piranha' is required when using MySQL database type");
+                        
+                        var serverVersion = ServerVersion.AutoDetect(mysqlConnectionString);
                         options.UseEF<MySqlDb>(db =>
-                            db.UseMySql(_config.GetConnectionString("piranha"), ServerVersion.AutoDetect(_config.GetConnectionString("piranha"))));
+                            db.UseMySql(mysqlConnectionString, serverVersion));
                         options.UseIdentityWithSeed<IdentitySQLServerDb>(db =>
-                            db.UseMySql(_config.GetConnectionString("piranha"), ServerVersion.AutoDetect(_config.GetConnectionString("piranha"))));
+                            db.UseMySql(mysqlConnectionString, serverVersion));
                         services.AddHealthChecks()
-                            .AddMySql(_config.GetConnectionString("piranha"));
+                            .AddMySql(mysqlConnectionString);
                         break;
 
                     case "postgres":
+                        var postgresConnectionString = _config.GetConnectionString("piranha");
+                        if (string.IsNullOrEmpty(postgresConnectionString))
+                            throw new InvalidOperationException("PostgreSQL connection string 'piranha' is required when using PostgreSQL database type");
+                        
                         options.UseEF<PostgreSqlDb>(db =>
-                            db.UseNpgsql(_config.GetConnectionString("piranha")));
+                            db.UseNpgsql(postgresConnectionString));
                         options.UseIdentityWithSeed<IdentitySQLServerDb>(db =>
-                            db.UseNpgsql(_config.GetConnectionString("piranha")));
+                            db.UseNpgsql(postgresConnectionString));
                         services.AddHealthChecks()
-                            .AddNpgSql(_config.GetConnectionString("piranha"));
+                            .AddNpgSql(postgresConnectionString);
                         break;
 
                     case "sqlserver":
+                        var sqlServerConnectionString = _config.GetConnectionString("piranha");
+                        if (string.IsNullOrEmpty(sqlServerConnectionString))
+                            throw new InvalidOperationException("SQL Server connection string 'piranha' is required when using SQL Server database type");
+                        
                         options.UseEF<SQLServerDb>(db =>
-                            db.UseSqlServer(_config.GetConnectionString("piranha")));
+                            db.UseSqlServer(sqlServerConnectionString));
                         options.UseIdentityWithSeed<IdentitySQLServerDb>(db =>
-                            db.UseSqlServer(_config.GetConnectionString("piranha")));
+                            db.UseSqlServer(sqlServerConnectionString));
                         services.AddHealthChecks()
-                            .AddSqlServer(_config.GetConnectionString("piranha"));
-
+                            .AddSqlServer(sqlServerConnectionString);
                         break;
 
                     default:

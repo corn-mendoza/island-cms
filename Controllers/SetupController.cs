@@ -35,13 +35,17 @@ namespace cms_mvc.Controllers
         [Route("/seed")]
         public async Task<IActionResult> Seed()
         {
-            var images = new Dictionary<string, Guid>();
+            try
+            {
+                var images = new Dictionary<string, Guid>();
 
-            // Get the default site
-            var site = await _api.Sites.GetDefaultAsync();
+                // Get the default site
+                var site = await _api.Sites.GetDefaultAsync();
 
-            // Add media assets
-            foreach (var image in Directory.GetFiles("seed"))
+                // Add media assets - check if seed directory exists
+                if (Directory.Exists("seed"))
+                {
+                    foreach (var image in Directory.GetFiles("seed"))
             {
                 var info = new FileInfo(image);
                 var id = Guid.NewGuid();
@@ -292,7 +296,17 @@ namespace cms_mvc.Controllers
             comment.Url = "http://piranhacms.org";
             await _api.Posts.SaveCommentAsync(post3.Id, comment);
 
-            return Redirect("~/");
+                }
+
+                return Redirect("~/");
+            }
+            catch (Exception ex)
+            {
+                // Log the error if logging is available
+                // For now, return a view with error information
+                ViewBag.ErrorMessage = $"An error occurred during setup: {ex.Message}";
+                return View("Error");
+            }
         }
     }
 }
