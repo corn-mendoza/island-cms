@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Piranha;
 using Piranha.AspNetCore.Identity.SQLite;
 using Piranha.AspNetCore.Identity.SQLServer;
@@ -129,9 +130,9 @@ namespace cms_mvc
                 {
                     case "mysql":
                         options.UseEF<MySqlDb>(db =>
-                            db.UseMySql(_config.GetConnectionString("piranha")));
+                            db.UseMySql(_config.GetConnectionString("piranha"), ServerVersion.AutoDetect(_config.GetConnectionString("piranha"))));
                         options.UseIdentityWithSeed<IdentitySQLServerDb>(db =>
-                            db.UseMySql(_config.GetConnectionString("piranha")));
+                            db.UseMySql(_config.GetConnectionString("piranha"), ServerVersion.AutoDetect(_config.GetConnectionString("piranha"))));
                         services.AddHealthChecks()
                             .AddMySql(_config.GetConnectionString("piranha"));
                         break;

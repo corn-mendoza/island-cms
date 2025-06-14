@@ -282,14 +282,12 @@ namespace cms_mvc.Controllers
 
             await _api.Posts.SaveAsync(post3);
 
-            var comment = new Piranha.Models.Comment
-            {
-                Author = "Håkan Edling",
-                Email = "hakan@tidyui.com",
-                Url = "http://piranhacms.org",
-                Body = "Awesome to see that the project is up and running! Now maybe it's time to start customizing it to your needs. You can find a lot of information in the official docs.",
-                IsApproved = true
-            };
+            var comment = Piranha.Models.Comment.Create();
+            comment.Author = "Håkan Edling";
+            comment.Email = "hakan@tidyui.com";
+            comment.Url = "http://piranhacms.org";
+            comment.Body = "Awesome to see that the project is up and running! Now maybe it's time to start customizing it to your needs. You can find a lot of information in the official docs.";
+            comment.IsApproved = true;
             await _api.Posts.SaveCommentAsync(post3.Id, comment);
 
             return Redirect("~/");

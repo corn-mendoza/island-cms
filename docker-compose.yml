@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  island-cms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - PIRANHA_DBTYPE=file
+      - PIRANHA_DBNAME=piranha.db
+      - PIRANHA_DBPATH=/app/data/
+      - PIRANHA_BASEPATH=/app/wwwroot/uploads
+      - PIRANHA_BASEURL=~/uploads/
+      - PIRANHA_MEDIASTORE=file
+      - PIRANHA_SESSIONCACHE=false
+      - PIRANHA_REDISCACHE=false
+      - PIRANHA_HEALTHUI=true
+    volumes:
+      - cms_data:/app/data
+      - cms_uploads:/app/wwwroot/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Optional: SQL Server for production use
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong!Passw0rd
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
+    profiles:
+      - sqlserver
+
+  # Optional: Redis for session caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    profiles:
+      - redis
+
+volumes:
+  cms_data:
+  cms_uploads:
+  sqlserver_data:
+  redis_data:

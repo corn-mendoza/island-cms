@@ -109,15 +109,13 @@ namespace cms_mvc.Controllers
                 var model = await _loader.GetPostAsync<StandardPost>(commentModel.Id, HttpContext.User);
 
                 // Create the comment
-                var comment = new Comment
-                {
-                    IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString(),
-                    UserAgent = Request.Headers.ContainsKey("User-Agent") ? Request.Headers["User-Agent"].ToString() : "",
-                    Author = commentModel.CommentAuthor,
-                    Email = commentModel.CommentEmail,
-                    Url = commentModel.CommentUrl,
-                    Body = commentModel.CommentBody
-                };
+                var comment = Piranha.Models.Comment.Create();
+                comment.IpAddress = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+                comment.UserAgent = Request.Headers.ContainsKey("User-Agent") ? Request.Headers["User-Agent"].ToString() : "";
+                comment.Author = commentModel.CommentAuthor;
+                comment.Email = commentModel.CommentEmail;
+                comment.Url = commentModel.CommentUrl;
+                comment.Body = commentModel.CommentBody;
                 await _api.Posts.SaveCommentAndVerifyAsync(commentModel.Id, comment);
 
                 return Redirect(model.Permalink + "#comments");

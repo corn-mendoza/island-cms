@@ -1,25 +1,78 @@
-**/.classpath
-**/.dockerignore
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+CHANGELOG.md
+*.md
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+*.vsp
+*.vspscc
+**/*.*proj.user
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# Build outputs
+bin/
+obj/
+out/
+
+# NuGet
+packages/
+*.nupkg
+
+# Test results
+TestResults/
+coverage/
+
+# Runtime files
+*.log
+*.db
+*.sqlite
+**/*.dbmdl
+**/*.jfm
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+
+# Development files
+appsettings.Development.json
+appsettings.Local.json
 **/.env
-**/.git
-**/.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# GitHub Actions
+.github/
+
+# Other
+**/azds.yaml
+**/charts
+**/node_modules
+**/npm-debug.log
+**/secrets.dev.yaml
+**/values.dev.yaml
+**/.classpath
 **/.project
 **/.settings
 **/.toolstarget
-**/.vs
-**/.vscode
-**/*.*proj.user
-**/*.dbmdl
-**/*.jfm
-**/azds.yaml
-**/bin
-**/charts
-**/docker-compose*
-**/Dockerfile*
-**/node_modules
-**/npm-debug.log
-**/obj
-**/secrets.dev.yaml
-**/values.dev.yaml
 LICENSE
-README.md

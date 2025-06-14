@@ -1,132 +1,386 @@
-# Island CMS
-CMS Portal built using Piranha CMS frameworks and modified for Container deployments. Check out the great work of the community [here](https://piranhacms.org/).
+# Island CMS v2.0.0
+
+CMS Portal built using Piranha CMS framework v12.0.0 and optimized for container deployments. This project is based on the great work of the [Piranha CMS](https://piranhacms.org/) community.
 
 ## Overview
-This application is built using .NET Core 3.1 and CMS frameworks developed by Piranha CMS Open Source project. The application is designed to use an NFS mount or persistent storage in containers to store media and SQL Server to store application data. The application can load configuration data from multiple sources including a configuration server hosted on Cloud Foundry, Kubernetes, or Azure Spring Cloud Services. 
+This application is built using **.NET 8.0** and the latest Piranha CMS framework v12.0.0. The application is designed for cloud-native deployments using containers with support for multiple storage backends (file, SQL Server, MySQL, PostgreSQL, SQLite) on Linux or Windows platforms.
+
+## New in v2.0.0
+- **Upgraded to .NET 8.0** for improved performance and security
+- **Updated to Piranha CMS v12.0.0** with latest features and bug fixes  
+- **Enhanced Docker support** with multi-stage builds and security improvements
+- **Comprehensive GitHub Actions workflows** for CI/CD
+- **Improved container security** with non-root user execution
+- **Multi-platform container builds** (AMD64/ARM64)
+- **Enhanced environment variable configuration** for cloud deployments
 
 ## Objectives
 
-- One .NET Core code base to deploy to multiple deploment scenarios (container, VM, server) using different types of backends (file, SQL Server, MySQL, Postgres, SQLite) on Linux or Windows
-- Demonstrate 12 factor patterns utilizing native .NET and Steeltoe libraries
-- Use NFS volume mounts with .NET Core application deployments to persist content
-- Implement a simple configuration based application options support for different deployment options
-- Provide the ability to override configuration file data with environment variables injected using config maps implemented through a single options class
-- Support both Cloud Foundry and Kubernetes based deployments from a single set of source code
-- Support bindable services using the marketplace in cloud foundry and config maps for kubernetes via Steeltoe connectors
-- Enable health checks and other management capabilities enabled by Steeltoe v3
+- Single .NET 8.0 codebase deployable to multiple scenarios (container, VM, server)
+- Support for multiple database backends (file, SQL Server, MySQL, PostgreSQL, SQLite)
+- Demonstrate 12-factor app patterns using native .NET and Steeltoe libraries
+- Container-optimized with NFS volume mount support for content persistence
+- Configuration-driven application with comprehensive environment variable support
+- Support for Cloud Foundry, Kubernetes, and Azure Spring Cloud deployments
+- Steeltoe v3 integration for cloud-native capabilities
+- Built-in health checks and management endpoints
 
-## CI/CD
-This repo is tied to two Azure DevOps pipelines to demonstrate continuous integration. The Kuberentes pipeline is also tied to [ArgoCD](https://argoproj.github.io/argo-cd/) for deployments. 
+## Quick Start with Docker
 
-## Installation
-The simplest deployment for the application is to set the database and media types to file. In this case, all data will be lost when the container is restarted or redeployed.
+### Using Docker Compose (Recommended)
 
-To push a basic single instance version to Cloud Foundry without data services use the cms_manifest.yml.
+```bash
+# Clone the repository
+git clone <repository-url>
+cd island-cms
 
-### Volume Mounts
-One difference between cloud foundry and kubernetes deployments is when nfs mounts are done during the container deployment stage. On cloud foundry, volume mounts occur at the start of the the container deployment process while on kubernetes, volume mounts are attached after the application is staged. Because of this, you cannot nfs mount a volume to a sub-folder of the application. This can cause issues for applications dependent on subfolders to be located in a specific location on cloud foundry. In this application, that is the case for the base URL. The base URL must point to a sub-folder of the application. To resolve this, the start command in the manifest has been modified to create a symbolic link to the nfs location. The start command in the manifest file will need to be modified if the volume is mounted in a different location than `/home/media`.
+# Start the application with file-based storage
+docker-compose up -d
 
-### Available Configuration Environment Variables
-By default, the environment variables will always override configuration settings located in the appsettings.json file. All of the settings below can also be configured in settings file.
+# Or start with SQL Server
+docker-compose --profile sqlserver up -d
 
-- PIRANHA_DBTYPE - Database type for application data
-	- Valid Values: file (default) | sqlserver | mysql | postgres
-	- Parameters: Connection String provided in appsettings.json or secrets
-- PIRANHA_DBNAME - Database filename for database file
-	- Valid Values: string (default = piranha.db)
-	- Note: Only valid for 'file' DBTYPE
-- PIRANHA_DBPATH - Database path for database file
-	- Valid Values: string (default = .)
-	- Note: Only valid for 'file' DBTYPE
-- PIRANHA_BASEPATH - Upload location for media files
-	- Valid Values: string (default = wwwroot/uploads)
-- PIRANHA_BASEURL - URL location for media files
-	- Valid Values: string (default = ~/uploads/)
-- PIRANHA_MEDIASTORE - Media storage type 
-	- Valid Values: file (default) | azure
-	- Parameters: Connection String provided in appsettings.json or secrets
-- PIRANHA_SESSIONCACHE - Enable session caching 
-	- Valid Values: false (default) | true
-- PIRANHA_REDISCACHE - Use Redis connector for session caching 
-	- Valid Values: false (default - use distributed memory cache) | true
-- PIRANHA_HEALTHUI - Enable Health Check UI endpoint 
-	- Valid Values: false (default) | true
+# Or start with Redis caching
+docker-compose --profile redis up -d
+```
 
-### Available Configuration via appsettings.json
-The application can be configured using the standard .NET Core configuration files.
+The application will be available at `http://localhost:8080`
 
-Example appsettings.json entries:
+### Using Docker CLI
 
-		"piranha": {
-		  "DatabaseType": "file",
-		  "DatabaseFilename": "piranha.db",
-		  "DatabasePath": ".",
-		  "BasePath": "wwwroot/uploads",
-		  "BaseUrl": "~/uploads/",
-		  "MediaStorageType": "file",
-		  "EnableDiscoveryClient": false,
-		  "EnableRedisCache": false,
-		  "EnableSessionCache": false,
-		  "EnableHealthUI": false
-		},
-		"ConnectionStrings": {
-		  "piranha": "Server=sqlserver;Database=island_cms;UID=piranha_user;Password=password",
-		  "pirahna-media": "DefaultEndpointsProtocol=https;AccountName=;AccountKey=;EndpointSuffix="
-		}
+```bash
+# Build the image
+docker build -t island-cms:latest .
 
+# Run with file storage
+docker run -d \
+  --name island-cms \
+  -p 8080:8080 \
+  -v cms_data:/app/data \
+  -v cms_uploads:/app/wwwroot/uploads \
+  -e PIRANHA_DBTYPE=file \
+  -e PIRANHA_HEALTHUI=true \
+  island-cms:latest
+```
 
-### Secrets Support
-This application is designed to support loading an optional secrets file located in the secrets sub-folder. Additional settings can be injected by providing an `appsettings.secrets.json` file placed in the secrets folder.
+## Configuration
 
-To add the secret, use the following command:
+### Environment Variables
+All configuration can be managed through environment variables for container deployments:
 
-`kubectl create secret generic <secret-name> --from-file=./appsettings.secrets.json`
+| Variable | Description | Default | Valid Values |
+|----------|-------------|---------|--------------|
+| `PIRANHA_DBTYPE` | Database type | `file` | `file`, `sqlserver`, `mysql`, `postgres` |
+| `PIRANHA_DBNAME` | Database filename (file type only) | `piranha.db` | Any valid filename |
+| `PIRANHA_DBPATH` | Database path (file type only) | `.` | Any valid path |
+| `PIRANHA_BASEPATH` | Media upload location | `wwwroot/uploads` | Any valid path |
+| `PIRANHA_BASEURL` | Media URL location | `~/uploads/` | Any valid URL path |
+| `PIRANHA_MEDIASTORE` | Media storage type | `file` | `file`, `azure` |
+| `PIRANHA_SESSIONCACHE` | Enable session caching | `false` | `true`, `false` |
+| `PIRANHA_REDISCACHE` | Use Redis for session cache | `false` | `true`, `false` |
+| `PIRANHA_HEALTHUI` | Enable Health Check UI | `false` | `true`, `false` |
+| `PIRANHA_DISCOVERY` | Enable service discovery | `false` | `true`, `false` |
 
-Add a reference to your deployment to the secret as a volume mount:
+### Database Configuration
 
+#### Connection Strings
+Configure database connections via environment variables or `appsettings.json`:
 
+```json
+{
+  "ConnectionStrings": {
+    "piranha": "Server=sqlserver;Database=island_cms;UID=piranha_user;Password=password",
+    "piranha-media": "DefaultEndpointsProtocol=https;AccountName=account;AccountKey=key;EndpointSuffix=core.windows.net"
+  }
+}
+```
 
-             volumeMounts:	     
-             - name: secrets             
-               mountPath: /app/secrets	       
-               readOnly: true	       
-         volumes:	 
-         - name: secrets         
-           secret:	   
-             secretName: <secret-name>
+#### File Database (Default)
+```bash
+PIRANHA_DBTYPE=file
+PIRANHA_DBNAME=piranha.db
+PIRANHA_DBPATH=/app/data
+```
 
-	     
-### Azure DevOps Support for Self-Signed Registries
-Included in this project is an example approach to injecting the certificate needed to push an image to a private registry that is using a self-signed certificate. The pipeline can be easily modified to change the location where the certificate is stored. 
+#### SQL Server
+```bash
+PIRANHA_DBTYPE=sqlserver
+ConnectionStrings__piranha="Server=sqlserver;Database=cms;User Id=sa;Password=YourPassword;TrustServerCertificate=true;"
+```
 
-### Kubrenetes, Cloud Foundry, and Azure Spring Cloud Services Config Server Support
-The application includes the Steeltoe and Azure libraries and methods to load configuration data from a configuration server hosted on Kubernetes, Azure Spring Cloud Services, or Tanzu Application Services (aka Cloud Foundry). Configuration Server information must be provided in the appsettings.json file.
+#### MySQL
+```bash
+PIRANHA_DBTYPE=mysql
+ConnectionStrings__piranha="Server=mysql;Database=cms;Uid=root;Pwd=password;"
+```
 
-### Steeltoe v3 support
-In addition to configuration services, other Steeltoe functionality will be available on the appropriate deployment platforms.
+#### PostgreSQL
+```bash
+PIRANHA_DBTYPE=postgres
+ConnectionStrings__piranha="Host=postgres;Database=cms;Username=postgres;Password=password"
+```
 
-#### Management Endpoints
-Steeltoe management endpoints are enabled for this application. Please follow the Steeltoe documentation for configuring the management endpoints on Kubernetes or Cloud Foundry. 
+### Media Storage
 
-#### Serilog Dynamic Logging Support
-Support for Serilog dynamic console logging which extends Serilog so you can configure it the same way you would Serilog. For more details on how this is done, see the section on [Serilog-Settings-Configuration](https://github.com/serilog/serilog-settings-configuration) in the Steeltoe documentation.
+#### File Storage (Default)
+```bash
+PIRANHA_MEDIASTORE=file
+PIRANHA_BASEPATH=/app/wwwroot/uploads
+PIRANHA_BASEURL=~/uploads/
+```
 
-#### Redis Session Caching Support
-Includes Redis Distributed Caching support when the environment variable ASPNETCORE_ENVIRONMENT is set to `Production`. Redis configuration information needs to be provided via the appsettings.json file or through another configuration provider depending on deployment platform. By default, distbuted memory caching will be used for session data.
+#### Azure Blob Storage
+```bash
+PIRANHA_MEDIASTORE=azure
+ConnectionStrings__piranha-media="DefaultEndpointsProtocol=https;AccountName=storage;AccountKey=key;"
+```
 
-#### Service Discovery
-Service discovery can be enabled via configuration. To enable the feature, set `EnableServiceDiscovery` to `true` and add the service discovery connection options where necessary.
+## Container Deployment
+
+### Production Deployment
+
+The application includes optimized Docker configuration for production:
+
+- **Multi-stage builds** for smaller image sizes
+- **Non-root user execution** for enhanced security
+- **Health checks** for container orchestration
+- **Multi-platform support** (AMD64/ARM64)
+- **Optimized for container registries**
+
+### Kubernetes Deployment
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: island-cms
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: island-cms
+  template:
+    metadata:
+      labels:
+        app: island-cms
+    spec:
+      containers:
+      - name: island-cms
+        image: ghcr.io/your-org/island-cms:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PIRANHA_DBTYPE
+          value: "sqlserver"
+        - name: PIRANHA_HEALTHUI
+          value: "true"
+        - name: ConnectionStrings__piranha
+          valueFrom:
+            secretKeyRef:
+              name: database-connection
+              key: connection-string
+        volumeMounts:
+        - name: uploads
+          mountPath: /app/wwwroot/uploads
+        - name: data
+          mountPath: /app/data
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      volumes:
+      - name: uploads
+        persistentVolumeClaim:
+          claimName: cms-uploads
+      - name: data
+        persistentVolumeClaim:
+          claimName: cms-data
+```
+
+### Volume Mounts for Persistence
+
+For persistent deployments, mount volumes for:
+
+- **Database files**: `/app/data` (when using file database)
+- **Media uploads**: `/app/wwwroot/uploads`
+- **Secrets**: `/app/secrets` (optional)
+
+## Cloud Platform Support
+
+### Cloud Foundry
+Use the included `cms_manifest.yml` for basic deployments:
+
+```bash
+cf push -f cms_manifest.yml
+```
+
+### Kubernetes
+Full Kubernetes support with:
+- ConfigMaps for configuration
+- Secrets for sensitive data  
+- Persistent volumes for data
+- Health checks and readiness probes
+
+### Azure Spring Cloud
+Native integration with Azure Spring Cloud Services for configuration management and service discovery.
+
+## Development
+
+### Prerequisites
+- .NET 8.0 SDK
+- Docker (optional)
+- Database server (optional, file storage works out of box)
+
+### Local Development
+```bash
+# Restore packages
+dotnet restore
+
+# Run the application
+dotnet run
+
+# Or using Docker
+docker-compose -f docker-compose.yml up
+```
+
+The application will be available at `https://localhost:5001` or `http://localhost:5000`
+
+### Building for Production
+```bash
+# Build release version
+dotnet build --configuration Release
+
+# Publish self-contained
+dotnet publish --configuration Release --runtime linux-x64 --self-contained
+```
+
+## Health Monitoring
+
+### Health Checks
+Built-in health checks for:
+- Database connectivity
+- External storage (Azure Blob)
+- Redis cache (when enabled)
+- Application responsiveness
+
+Access health checks:
+- **Health status**: `/health`
+- **Health UI**: `/healthchecks-ui` (when `PIRANHA_HEALTHUI=true`)
+
+### Monitoring and Observability
+
+#### Steeltoe Management Endpoints
+Available management endpoints:
+- `/cloudfoundryapplication/info` - Application information
+- `/cloudfoundryapplication/health` - Health status
+- `/cloudfoundryapplication/metrics` - Application metrics
+- `/cloudfoundryapplication/loggers` - Dynamic logging control
 
 #### Distributed Tracing
-Distributed tracing is enabled for the application. Steeltoe distributed tracing implements a solution for .NET applications using the open source OpenTelemetry project. 
+Integrated OpenTelemetry tracing for monitoring request flows across services.
 
-#### Kubernetes ConfigMap and Secrets Connector
-Implemented Kubernetes ConfigMaps and Secrets providers via the Steeltoe Configuration provider. This provides an additional mechanism to implement environment related parameters inside of Kubernetes. See the [documentation](https://docs.steeltoe.io/api/v3/configuration/kubernetes-providers.html) on the Steeltoe site for more information on how to use this feature. To turn the feature on, set `Spring:Cloud:Kubernetes:Enabled=true`.
+#### Dynamic Logging
+Serilog dynamic logging with runtime log level configuration support.
 
-### Wavefront Integration
-On TAS, Wavefront Integration is automatically supported within the platform. With TKGI, Wavefront integration needs to be implemented within the tile in OpsManager.
+## Security
 
-## Known Issues
-This application relies on the upstream code from Pirahna.org and there is no intention to fix bugs in the upstream releases. If you would like to help fix these issues, you should consider getting involved in Pirahna.org.
+### Container Security
+- **Non-root user**: Application runs as non-privileged user
+- **Read-only filesystem**: Minimal write permissions
+- **Security scanning**: Automated vulnerability scanning in CI/CD
+- **Minimal attack surface**: Alpine-based images with minimal packages
 
-- You may run into an issue updating the sub-text on pages where any updated text will not be saved. This is a reported bug in the main repo. To workaround this issue, you can add a content field at the top of the page and update the text in that component. Click on the page sub-text and then back on the content pane. The sub-text should get updated and you can now delete the content part that was added. Save and Publish the page.
+### Application Security
+- **Identity integration**: ASP.NET Core Identity with multiple providers
+- **HTTPS enforcement**: Configurable HTTPS redirection
+- **Content Security Policy**: Headers for XSS protection
+- **Secure headers**: Security-focused HTTP headers
+
+## CI/CD
+
+The project includes comprehensive GitHub Actions workflows:
+
+### Continuous Integration
+- **Build and test** on multiple platforms
+- **Code coverage** reporting
+- **Security scanning** with Trivy
+- **Multi-platform container builds**
+
+### Release Management
+- **Automated releases** with GitHub Releases
+- **Cross-platform binaries** (Windows, Linux, macOS)
+- **Container images** pushed to GitHub Container Registry
+- **Release notes** generation
+
+## Migration from v1.x
+
+### Breaking Changes in v2.0.0
+- **.NET Core 3.1 → .NET 8.0**: Update your runtime environment
+- **Piranha CMS v8.x → v12.0**: Review API changes in Piranha documentation
+- **Container port change**: Default port changed from 80/443 to 8080/8081
+- **Package updates**: All dependencies updated to latest versions
+
+### Migration Steps
+1. Update your .NET runtime to 8.0
+2. Update container base images if using custom builds
+3. Review environment variable configurations
+4. Test thoroughly in non-production environment
+5. Update deployment manifests for new port numbers
+
+## Troubleshooting
+
+### Common Issues
+
+#### Database Connection Issues
+- Verify connection strings are correctly formatted
+- Ensure database server is accessible from container
+- Check firewall rules and network policies
+
+#### Volume Mount Issues
+- Ensure proper permissions on mount points
+- Verify volume paths exist and are writable
+- Check SELinux/AppArmor policies if applicable
+
+#### Performance Issues
+- Enable Redis caching for better session performance
+- Use external database instead of file storage for production
+- Monitor resource usage and scale accordingly
+
+### Logs and Debugging
+Enable detailed logging:
+```bash
+ASPNETCORE_ENVIRONMENT=Development
+Logging__LogLevel__Default=Debug
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project maintains the same license as the original Island CMS project.
+
+## Support
+
+- **Issues**: Report issues on GitHub
+- **Documentation**: See [Piranha CMS Documentation](https://piranhacms.org/docs)
+- **Community**: Join the Piranha CMS community discussions
+
+## Acknowledgments
+
+- **Piranha CMS Team**: For the excellent CMS framework
+- **Steeltoe Team**: For cloud-native .NET capabilities
+- **Community Contributors**: For ongoing improvements and feedback
