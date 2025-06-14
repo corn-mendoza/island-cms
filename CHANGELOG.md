@@ -12,16 +12,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Actions workflows for CI/CD pipeline
 - Enhanced environment variable configuration support
 - Container-optimized deployment configurations
+- PostComment model for concrete Comment implementation
 
 ### Changed
 - **BREAKING CHANGE**: Upgraded from .NET Core 3.1 to .NET 8.0
-- Updated Piranha CMS framework from v8.4.x to v11.1.1
-- Updated all health check packages to v8.0.x for .NET 8.0 compatibility
+- Updated Piranha CMS framework from v8.4.x to v12.0.0
+- Updated all health check packages to latest .NET 8.0 compatible versions
 - Updated Steeltoe packages from v3.2.3 to v3.2.8
 - Replaced Microsoft.Extensions.Caching.Redis with Microsoft.Extensions.Caching.StackExchangeRedis v8.0.8
 - Updated Microsoft.VisualStudio.Azure.Containers.Tools.Targets to v1.21.0
 - All configuration now primarily handled through environment variables for container deployment
 - Enhanced Docker support with multi-stage builds and optimized runtime images
+
+### Fixed
+- Comment instantiation issues due to abstract Comment class in Piranha CMS v12.0.0
+- Program.cs hosting configuration for .NET 8.0 compatibility
+- MySQL ServerVersion configuration for Entity Framework Core
+- Missing using statements for ASP.NET Core hosting
+- Null reference handling in Comment creation
 
 ### Security
 - Updated all dependencies to latest versions with security patches
