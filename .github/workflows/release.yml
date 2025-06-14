@@ -12,6 +12,8 @@ jobs:
   build-release-assets:
     name: Build Release Assets
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     strategy:
       matrix:
         os: [linux-x64, linux-arm64, win-x64, osx-x64, osx-arm64]
@@ -142,3 +144,52 @@ jobs:
         asset_path: ./docker-compose-release.yml
         asset_name: docker-compose.yml
         asset_content_type: text/yaml
+        
+    - name: Extract changelog section for release
+      id: changelog
+      run: |
+        # Extract changelog section for the current release
+        VERSION="${{ github.event.release.tag_name }}"
+        VERSION_NO_V="${VERSION#v}"
+        
+        # Extract the changelog section between the current version and the next version
+        awk -v version="$VERSION_NO_V" '
+        /^## \[/ {
+          if (found_version) {
+            exit
+          }
+          if ($0 ~ "\\[" version "\\]") {
+            found_version = 1
+            next
+          }
+        }
+        found_version && !/^##/ {
+          print
+        }
+        ' CHANGELOG.md > changelog_section.md
+        
+        # Read the changelog content and set as output
+        echo 'changelog<<EOF' >> $GITHUB_OUTPUT
+        cat changelog_section.md >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_OUTPUT
+        
+    - name: Update release notes with changelog
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const changelog = `${{ steps.changelog.outputs.changelog }}`;
+          const currentBody = context.payload.release.body || '';
+          
+          let newBody;
+          if (currentBody.trim()) {
+            newBody = `${currentBody}\n\n## Changelog\n\n${changelog}`;
+          } else {
+            newBody = `## Changelog\n\n${changelog}`;
+          }
+          
+          await github.rest.repos.updateRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            release_id: context.payload.release.id,
+            body: newBody
+          });
