@@ -59,7 +59,7 @@ jobs:
     name: Build and Push Release Docker Images
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
       
     steps:
