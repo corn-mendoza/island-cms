@@ -37,7 +37,7 @@ jobs:
     - name: Create Archive
       run: |
         cd ./publish/${{ matrix.os }}
-        if [[ "${{ matrix.os }}" == win-* ]]; then
+        if [[ "${{ matrix.os }}" == "win-x64" ]]; then
           zip -r ../../island-cms-${{ github.event.release.tag_name }}-${{ matrix.os }}.zip .
         else
           tar -czf ../../island-cms-${{ github.event.release.tag_name }}-${{ matrix.os }}.tar.gz .

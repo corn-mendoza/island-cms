@@ -212,13 +212,19 @@ namespace cms_mvc
             // Configure Tiny MCE
             EditorConfig.FromFile("editorconfig.json");
 
-            if (_appOptions.EnableHealthUI)
+            // Configure health check endpoints
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
             {
-                app.UseEndpoints(config =>
+                // Basic health check endpoint
+                endpoints.MapHealthChecks("/health");
+                
+                // Health checks UI if enabled
+                if (_appOptions.EnableHealthUI)
                 {
-                    config.MapHealthChecksUI();
-                });
-            }
+                    endpoints.MapHealthChecksUI();
+                }
+            });
 
             // Middleware setup
             app.UsePiranha(options => {
