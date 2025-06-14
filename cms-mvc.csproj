@@ -9,17 +9,17 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="7.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="9.0.0" />
-    <PackageReference Include="AspNetCore.HealthChecks.Npgsql" Version="8.0.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="8.0.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.SqLite" Version="8.0.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.2" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="8.0.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="8.0.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.PostgreSQL.Storage" Version="8.0.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.SQLite.Storage" Version="8.0.1" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.SqlServer.Storage" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.8" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Npgsql" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.SqLite" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.PostgreSQL.Storage" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.SQLite.Storage" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.SqlServer.Storage" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.12" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1-preview.1" />
     <PackageReference Include="Piranha" Version="12.0.0" />
     <PackageReference Include="Piranha.AspNetCore" Version="12.0.0" />
     <PackageReference Include="Piranha.AspNetCore.Identity" Version="12.0.0" />

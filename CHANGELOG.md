@@ -54,6 +54,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Proper error handling to prevent information disclosure
 - Container security scanning with severity filtering (CRITICAL/HIGH)
 - Alpine Linux base images for minimal attack surface
+- Updated Docker base images to .NET 8.0.12-alpine3.20 with latest security patches
+- Upgraded health check packages to v9.0.0 for latest security improvements
+- Fixed security header implementation to prevent duplicate header exceptions
+- Enhanced container security with no-new-privileges and capability restrictions
+- Added comprehensive security headers (CSP, HSTS, X-Frame-Options, etc.)
+- Implemented strict file permissions and non-root user execution in containers
 
 ### Infrastructure
 - Added comprehensive GitHub Actions workflows for build, test, security scan, and deployment

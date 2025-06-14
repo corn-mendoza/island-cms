@@ -60,6 +60,21 @@ namespace cms_mvc
             // Add Distributed tracing
             services.AddDistributedTracing();
 
+            // Add security services
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "X-CSRF-TOKEN";
+                options.SuppressXFrameOptionsHeader = false;
+            });
+
+            // Configure security headers
+            services.AddHsts(options =>
+            {
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(365);
+            });
+
             _appOptions = _config.GetSection("piranha").Get<PiranhaOptions>();
 
             // Enabling session caching for the admin functionality is not recommended - ideally, a second singleton container would be deployed to allow for management functions
@@ -189,6 +204,28 @@ namespace cms_mvc
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
+
+            // Add security headers middleware
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers["X-Frame-Options"] = "DENY";
+                context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+                context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
+                context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+                context.Response.Headers["Content-Security-Policy"] = 
+                    "default-src 'self'; " +
+                    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+                    "style-src 'self' 'unsafe-inline'; " +
+                    "img-src 'self' data: https:; " +
+                    "font-src 'self'; " +
+                    "connect-src 'self'";
+                await next();
+            });
 
             //if (_appOptions.EnableDiscoveryClient)
             //{
